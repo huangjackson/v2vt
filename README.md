@@ -191,7 +191,7 @@ Special thanks to the following projects:
 [issues-shield]: https://img.shields.io/github/issues/huangjackson/v2vt.svg?style=for-the-badge
 [issues-url]: https://github.com/huangjackson/v2vt/issues
 [license-shield]: https://img.shields.io/github/license/huangjackson/v2vt.svg?style=for-the-badge
-[license-url]: https://github.com/huangjackson/v2vt/blob/main/LICENSE.txt
+[license-url]: https://github.com/huangjackson/v2vt/blob/main/LICENSE
 [colab-shield]: https://img.shields.io/badge/Colab-F9AB00?style=for-the-badge&logo=googlecolab&color=525252
 [colab-url]: https://colab.research.google.com/drive/19LCVrSCl16oVoiPnTtSJEaf1oaokgR0k?usp=sharing
 [huggingface-shield]: https://img.shields.io/badge/🤗-Hugging%20Face-yellow.svg?style=for-the-badge
