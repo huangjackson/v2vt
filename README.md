@@ -76,15 +76,23 @@ Visit the [HuggingFace demo][huggingface-url]. Note that if there are any other 
 
 ### Build Locally
 
-Currently only tested in a Windows 11 environment with Python 3.9, PyTorch 2.1.1, CUDA 12.4.
+Currently only tested in a Windows 11 environment with Python 3.9, PyTorch 2.1.1, CUDA 11.8. Requires an NVIDIA GPU.
 
 #### Prerequisites
 
-Note: it is recommended to install within an Anaconda environment to prevent compatibility issues (`conda create -n v2vt python=3.9` and `conda activate v2vt`)
+Note: it is recommended to install within an environment to prevent compatibility issues (via Anaconda: `conda create -n v2vt` and `conda activate v2vt`)
 
 * ffmpeg
   ```sh
   conda install ffmpeg
+  ```
+  or
+  ```sh
+  choco install ffmpeg
+  ```
+* pytorch & CUDA
+  ```sh
+  conda install pytorch==2.1.1 torchvision==0.16.1 torchaudio==2.1.1 pytorch-cuda=11.8 -c pytorch -c nvidia
   ```
 * rust (may not be necessary -- install if you see errors)
   https://www.rust-lang.org/learn/get-started
@@ -160,7 +168,7 @@ If you have a suggestion that would make this better, please fork the repo and c
 ## License
 
 Distributed under the MIT License. See `LICENSE` for more information.
-See individual folders or the `/LICENSE` directory for any other licenses credited.
+See individual folders or the `/licenses` directory for any other licenses credited.
 
 
 <!-- CONTACT -->
