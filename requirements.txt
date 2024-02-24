@@ -1,2 +1,9 @@
-faster-whisper==0.10.0
+librosa==0.9.2
+numpy==1.26.3
+faster-whisper==1.0.0
 chardet==5.2.0
+pytorch-lightning==2.2.0.post0
+onnx
+onnxruntime
+onnxruntime-gpu
+onnx2pytorch

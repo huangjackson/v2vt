@@ -58,8 +58,9 @@
 
 demo.mp4
 
-* **Few-shot voice cloning**: Realistic voice cloning and TTS with as little as 5 seconds of audio from source video (currently supports English and Chinese)
+* **Vocal isolation**: Isolation of vocals from source video using deep neural networks
 * **Transcription/translation**: Transcription and translation from source language using whisper
+* **Few-shot voice cloning**: Realistic voice cloning and TTS with as little as 5 seconds of audio from source video (currently supports English and Chinese)
 * **Audio-based lip sync**: Alter faces in source video to match translated audio
 
 
@@ -168,7 +169,7 @@ If you have a suggestion that would make this better, please fork the repo and c
 ## License
 
 Distributed under the MIT License. See `LICENSE` for more information.
-See individual folders or the `/licenses` directory for any other licenses credited.
+See individual files and folders for any other licenses credited.
 
 
 <!-- CONTACT -->
@@ -186,11 +187,12 @@ Project Link: [https://github.com/huangjackson/v2vt](https://github.com/huangjac
 Special thanks to the following projects:
 
 * [GPT-SoVITS](https://github.com/RVC-Boss/GPT-SoVITS)
-* [whisper](https://github.com/openai/whisper)
 * [faster-whisper](https://github.com/SYSTRAN/faster-whisper)
+* [ultimatevocalremovergui](https://github.com/Anjok07/ultimatevocalremovergui)
+* [KUIELab & Woosung Choi](https://github.com/kuielab) - For the original MDX-Net music demixing model
+* [KimberleyJensen](https://github.com/KimberleyJensen) - For the Kim Vocal 2 MDX-Net model (used in tools/uvr/models)
 * [video-retalking](https://github.com/OpenTalker/video-retalking)
 * [hifi-gan](https://github.com/jik876/hifi-gan)
-* [ultimatevocalremovergui](https://github.com/Anjok07/ultimatevocalremovergui)
 * [FFmpeg](https://github.com/FFmpeg/FFmpeg)
 * [Best-README-Template](https://github.com/othneildrew/Best-README-Template)
 
