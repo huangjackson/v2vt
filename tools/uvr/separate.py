@@ -1,20 +1,48 @@
 # Includes modified code from https://github.com/Anjok07/ultimatevocalremovergui
 
+from __future__ import annotations
+from typing import TYPE_CHECKING
+import os
+import gc
+
 import numpy
 import librosa
-from onnx import load
+import torch
+import soundfile
 import onnxruntime
+from onnx import load
 from onnx2pytorch import ConvertModel
 
-from typing import TYPE_CHECKING
+from tfc_tdf_v3 import STFT
 
 if TYPE_CHECKING:
     from uvr import ModelData
 
+cpu = torch.device('cpu')
+
+
+def clear_gpu_cache():
+    gc.collect()
+    torch.cuda.empty_cache()
+
+
+def verify_audio(audio_file):
+    if not type(audio_file) is tuple:
+        audio_file = [audio_file]
+
+    for i in audio_file:
+        if os.path.isfile(i):
+            try:
+                librosa.load(i, duration=3, mono=False, sr=44100)
+            except Exception as e:
+                return False
+
+    return True
+
 
 def prepare_mix(mix):
     if not isinstance(mix, numpy.ndarray):
-        mix = librosa.load(mix, mono=False, sr=44100)
+        mix, sr = librosa.load(mix, mono=False, sr=44100)
     else:
         mix = mix.T
 
@@ -26,17 +54,33 @@ def prepare_mix(mix):
 
 class SeparateAttributes:
     def __init__(self, model_data: ModelData, process_data: dict):
-        self.cached_source_callback = process_data['cached_source_callback']
         self.model_basename = model_data.model_basename
-        self.primary_sources = self.cached_source_callback(
-            model_name=self.model_basename)
+        self.model_path = model_data.model_path
+        self.primary_stem = model_data.primary_stem
+        self.mdx_segment_size = model_data.mdx_segment_size
+        self.mdx_batch_size = model_data.mdx_batch_size
+        self.compensate = model_data.compensate
+        self.dim_f = model_data.mdx_dim_f_set
+        self.dim_t = 2**model_data.mdx_dim_t_set
+        self.n_fft = model_data.mdx_n_fft_scale_set
+        self.hop = 1024
+        self.adjust = 1
+        self.audio_file = process_data['audio_file']
+        self.audio_file_base = process_data['audio_file_base']
+        self.export_path = process_data['export_path']
+        self.device = cpu
+        self.run_type = ['CPUExecutionProvider']
+
+        if torch.cuda.is_available():
+            self.device = 'cuda'
+            self.run_type = ['CUDAExecutionProvider']
 
 
 class SeparateMDX(SeparateAttributes):
     def separate(self):
         samplerate = 44100
 
-        if self.mdx_segment_size == self.dim_t and not self.is_other_gpu:
+        if self.mdx_segment_size == self.dim_t:
             ort_ = onnxruntime.InferenceSession(
                 self.model_path, providers=self.run_type)
             self.model_run = lambda spek: ort_.run(
@@ -47,5 +91,90 @@ class SeparateMDX(SeparateAttributes):
 
         mix = prepare_mix(self.audio_file)
 
-        # Incomplete -- add rest of separation code
-        
+        source = self.demix(mix)
+
+        primary_stem_path = os.path.join(
+            self.export_path, f'{self.audio_file_base}_{self.primary_stem}.wav')
+
+        soundfile.write(primary_stem_path, source.T, samplerate,
+                        subtype='PCM_16')
+
+        clear_gpu_cache()
+
+    def initialize_model_settings(self):
+        self.n_bins = self.n_fft//2+1
+        self.trim = self.n_fft//2
+        self.chunk_size = self.hop * (self.mdx_segment_size-1)
+        self.gen_size = self.chunk_size-2*self.trim
+        self.stft = STFT(self.n_fft, self.hop, self.dim_f, self.device)
+
+    def demix(self, mix):
+        self.initialize_model_settings()
+
+        tar_waves_ = []
+
+        chunk_size = self.chunk_size
+
+        gen_size = chunk_size-2*self.trim
+
+        pad = gen_size + self.trim - ((mix.shape[-1]) % gen_size)
+        mixture = numpy.concatenate((numpy.zeros(
+            (2, self.trim), dtype='float32'), mix, numpy.zeros((2, pad), dtype='float32')), 1)
+
+        step = self.chunk_size - self.n_fft
+        result = numpy.zeros((1, 2, mixture.shape[-1]), dtype=numpy.float32)
+        divider = numpy.zeros((1, 2, mixture.shape[-1]), dtype=numpy.float32)
+        total = 0
+
+        for i in range(0, mixture.shape[-1], step):
+            total += 1
+            start = i
+            end = min(i + chunk_size, mixture.shape[-1])
+
+            chunk_size_actual = end - start
+
+            window = numpy.hanning(chunk_size_actual)
+            window = numpy.tile(window[None, None, :], (1, 2, 1))
+
+            mix_part_ = mixture[:, start:end]
+            if end != i + chunk_size:
+                pad_size = (i + chunk_size) - end
+                mix_part_ = numpy.concatenate(
+                    (mix_part_, numpy.zeros((2, pad_size), dtype='float32')), axis=-1)
+
+            mix_part = torch.tensor(
+                mix_part_, dtype=torch.float32).unsqueeze(0).to(self.device)
+            mix_waves = mix_part.split(self.mdx_batch_size)
+
+            with torch.no_grad():
+                for mix_wave in mix_waves:
+                    tar_waves = self.run_model(mix_wave)
+
+                    tar_waves[..., :chunk_size_actual] *= window
+                    divider[..., start:end] += window
+
+                    result[..., start:end] += tar_waves[..., :end-start]
+
+        epsilon = 2e-16
+        tar_waves = result / (divider + epsilon)
+        tar_waves_.append(tar_waves)
+
+        tar_waves_ = numpy.vstack(tar_waves_)[:, :, self.trim:-self.trim]
+        tar_waves = numpy.concatenate(tar_waves_, axis=-1)[:, :mix.shape[-1]]
+
+        source = tar_waves[:, 0:None]
+
+        source = source * self.compensate
+
+        return source
+
+    def run_model(self, mix, is_match_mix=False):
+        spek = self.stft(mix.to(self.device))*self.adjust
+        spek[:, :, :3, :] *= 0
+
+        if is_match_mix:
+            spec_pred = spek.cpu().numpy()
+        else:
+            spec_pred = self.model_run(spek)
+
+        return self.stft.inverse(torch.tensor(spec_pred).to(self.device)).cpu().detach().numpy()

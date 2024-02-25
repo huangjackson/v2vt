@@ -1,13 +1,15 @@
 # Includes modified code from https://github.com/Anjok07/ultimatevocalremovergui
 
-import torch
 import os
+import argparse
+import glob
 import traceback
-import gc
-from glob import glob
 
-mdx_models_dir = "models"
-mdx_cache_source_mapper = {}
+from separate import (
+    SeparateMDX, verify_audio, clear_gpu_cache
+)
+
+mdx_models_dir = 'models'
 
 
 class ModelData():
@@ -16,75 +18,72 @@ class ModelData():
         self.model_path = self.get_mdx_model_path()
         self.model_basename = os.path.splitext(
             os.path.basename(self.model_path))[0]
+        self.compensate = 1.009
+        self.mdx_dim_f_set = 3072
+        self.mdx_dim_t_set = 8
+        self.mdx_n_fft_scale_set = 6144
+        self.primary_stem = 'Vocals'
+        self.mdx_segment_size = 256
+        self.mdx_batch_size = 1
 
     def get_mdx_model_path(self):
-        for file_name in glob(os.path.join(mdx_models_dir, '**/*.onnx'), recursive=True):
+        for file_name in glob.glob(os.path.join(mdx_models_dir, '**/*.onnx'), recursive=True):
             if self.model_name in file_name:
                 return file_name
 
         return ''
 
 
-def clear_gpu_cache():
-    gc.collect()
-    torch.cuda.empty_cache()
-
-
-def clear_cached_sources():
-    mdx_cache_source_mapper = {}
-
-
-def cached_source_callback(model_name=None):
-    model, sources = None, None
-
-    mapper = mdx_cache_source_mapper
-
-    for key, value in mapper.items():
-        if model_name in key:
-            model = key
-            sources = value
-
-    return model, sources
-
-
-def cached_model_source_holder(sources, model_name=None):
-    mdx_cache_source_mapper = {
-        **mdx_cache_source_mapper, **{model_name: sources}}
-
-
-def execute_uvr(input_folder, output_folder, model_name="Kim_Vocal_2", agg=10):
+def execute_uvr(input_folder, output_folder, model_name='Kim_Vocal_2'):
     input_paths = [os.path.join(input_folder, name)
                    for name in os.listdir(input_folder)]
 
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+
     try:
-        model = ModelData("Kim_Vocal_2")
+        model = ModelData(model_name)
 
-        for iteration, audio_file in enumerate(input_paths, start=1):
-            clear_cached_sources()
+        for audio_file in input_paths:
+            if not verify_audio(audio_file):
+                print(
+                    f'{os.path.basename(audio_file)} is not a valid .wav file, skipping')
+                continue
 
-            audio_file_base = f"{iteration}_{os.path.splitext(os.path.basename(audio_file))[0]}"
+            audio_file_base = os.path.splitext(os.path.basename(audio_file))[0]
 
             process_data = {
-                'model_data': model,
                 'export_path': output_folder,
                 'audio_file_base': audio_file_base,
                 'audio_file': audio_file,
-                'process_iteration': iteration,
-                'cached_source_callback': cached_source_callback,
-                'cached_model_source_holder': cached_model_source_holder,
             }
 
             separator = SeparateMDX(model, process_data)
 
             separator.separate()
 
+            print(f'{os.path.basename(audio_file)} UVR complete')
+
             clear_gpu_cache()
 
-        print("Process complete")
-
-        clear_cached_sources()
-
     except Exception:
-        print(traceback.format_exc())
+        return print(traceback.format_exc())
 
-        clear_cached_sources()
+    return output_folder
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-i', '--input_folder', type=str, required=True,
+                        help='Path to the source folder containing WAV files.')
+    parser.add_argument('-o', '--output_folder', type=str, required=True,
+                        help='Output folder to store isolated vocals.')
+    # parser.add_argument('-m', '--model_name', type=str, default='Kim_Vocal_2',
+    #                     help='Name of model to use for vocal separation.')
+
+    args = parser.parse_args()
+
+    output_file_path = execute_uvr(
+        args.input_folder, args.output_folder)
+
+    print(f'UVR complete - files written to {output_file_path}')

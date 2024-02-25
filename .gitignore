@@ -1,2 +1,10 @@
-venv
-*.onnx
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Testing
+tests/
+
+# Jupyter Notebook
+.ipynb_checkpoints
