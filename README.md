@@ -190,7 +190,7 @@ Special thanks to the following projects:
 * [faster-whisper](https://github.com/SYSTRAN/faster-whisper)
 * [ultimatevocalremovergui](https://github.com/Anjok07/ultimatevocalremovergui)
 * [KUIELab & Woosung Choi](https://github.com/kuielab) - For the original MDX-Net music demixing model
-* [KimberleyJensen](https://github.com/KimberleyJensen) - For the Kim Vocal 2 MDX-Net model (used in tools/uvr/models)
+* [KimberleyJensen](https://github.com/KimberleyJensen) - For the Kim Vocal 2 MDX-Net model (used in uvr/models)
 * [video-retalking](https://github.com/OpenTalker/video-retalking)
 * [hifi-gan](https://github.com/jik876/hifi-gan)
 * [FFmpeg](https://github.com/FFmpeg/FFmpeg)
