@@ -1,10 +1,37 @@
+# Includes modified code from https://github.com/RVC-Boss/GPT-SoVITS
+
+"""
+MIT License
+
+Copyright (c) 2024 RVC-Boss
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+"""
+
 import os
 import argparse
 import traceback
-from glob import glob
+import glob
 
 from faster_whisper import WhisperModel
 
+# Required to prevent error
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'TRUE'
 
 language_code_list = [
@@ -48,7 +75,7 @@ def execute_asr(input_folder, output_folder, model_size, language, precision):
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
 
-    for file in glob(os.path.join(input_folder, '**/*.wav'), recursive=True):
+    for file in glob.glob(os.path.join(input_folder, '**/*.wav'), recursive=True):
         try:
             segments, info = model.transcribe(
                 audio=file,
@@ -88,6 +115,7 @@ if __name__ == '__main__':
                         help='fp16 or fp32')
 
     cmd = parser.parse_args()
+
     output_file_path = execute_asr(
         input_folder=cmd.input_folder,
         output_folder=cmd.output_folder,

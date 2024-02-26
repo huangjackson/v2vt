@@ -3,6 +3,7 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 import os
+import traceback
 import gc
 
 import numpy
@@ -13,12 +14,10 @@ import onnxruntime
 from onnx import load
 from onnx2pytorch import ConvertModel
 
-from tfc_tdf_v3 import STFT
+from stft import STFT
 
 if TYPE_CHECKING:
     from uvr import ModelData
-
-cpu = torch.device('cpu')
 
 
 def clear_gpu_cache():
@@ -27,6 +26,8 @@ def clear_gpu_cache():
 
 
 def verify_audio(audio_file):
+    is_audio = True
+
     if not type(audio_file) is tuple:
         audio_file = [audio_file]
 
@@ -34,10 +35,11 @@ def verify_audio(audio_file):
         if os.path.isfile(i):
             try:
                 librosa.load(i, duration=3, mono=False, sr=44100)
-            except Exception as e:
-                return False
+            except Exception:
+                print(traceback.format_exc())
+                is_audio = False
 
-    return True
+    return is_audio
 
 
 def prepare_mix(mix):
@@ -53,6 +55,7 @@ def prepare_mix(mix):
 
 
 class SeparateAttributes:
+
     def __init__(self, model_data: ModelData, process_data: dict):
         self.model_basename = model_data.model_basename
         self.model_path = model_data.model_path
@@ -68,15 +71,14 @@ class SeparateAttributes:
         self.audio_file = process_data['audio_file']
         self.audio_file_base = process_data['audio_file_base']
         self.export_path = process_data['export_path']
-        self.device = cpu
-        self.run_type = ['CPUExecutionProvider']
-
-        if torch.cuda.is_available():
-            self.device = 'cuda'
-            self.run_type = ['CUDAExecutionProvider']
+        self.device = torch.device(
+            'cuda' if torch.cuda.is_available() else 'cpu')
+        self.run_type = ['CUDAExecutionProvider'] if torch.cuda.is_available() else [
+            'CPUExecutionProvider']
 
 
 class SeparateMDX(SeparateAttributes):
+
     def separate(self):
         samplerate = 44100
 
@@ -155,7 +157,7 @@ class SeparateMDX(SeparateAttributes):
 
                     result[..., start:end] += tar_waves[..., :end-start]
 
-        epsilon = 2e-16
+        epsilon = 2e-16  # Prevent division by 0 warning
         tar_waves = result / (divider + epsilon)
         tar_waves_.append(tar_waves)
 
@@ -168,13 +170,10 @@ class SeparateMDX(SeparateAttributes):
 
         return source
 
-    def run_model(self, mix, is_match_mix=False):
+    def run_model(self, mix):
         spek = self.stft(mix.to(self.device))*self.adjust
         spek[:, :, :3, :] *= 0
 
-        if is_match_mix:
-            spec_pred = spek.cpu().numpy()
-        else:
-            spec_pred = self.model_run(spek)
+        spec_pred = self.model_run(spek)
 
         return self.stft.inverse(torch.tensor(spec_pred).to(self.device)).cpu().detach().numpy()

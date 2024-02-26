@@ -9,22 +9,31 @@ from separate import (
     SeparateMDX, verify_audio, clear_gpu_cache
 )
 
-mdx_models_dir = 'models'
+script_dir = os.path.dirname(os.path.realpath(__file__))
+mdx_models_dir = os.path.join(script_dir, 'models')
 
 
 class ModelData():
+
     def __init__(self, model_name: str):
         self.model_name = model_name
         self.model_path = self.get_mdx_model_path()
         self.model_basename = os.path.splitext(
             os.path.basename(self.model_path))[0]
+
+        # Settings specific to Kim_Vocal_2.onnx model
         self.compensate = 1.009
         self.mdx_dim_f_set = 3072
         self.mdx_dim_t_set = 8
         self.mdx_n_fft_scale_set = 6144
         self.primary_stem = 'Vocals'
+
         self.mdx_segment_size = 256
         self.mdx_batch_size = 1
+
+        if not self.model_path:
+            raise ValueError(
+                "Model not found. Please check the model name and path.")
 
     def get_mdx_model_path(self):
         for file_name in glob.glob(os.path.join(mdx_models_dir, '**/*.onnx'), recursive=True):
