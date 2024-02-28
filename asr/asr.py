@@ -26,7 +26,6 @@ SOFTWARE.
 
 import os
 import argparse
-import traceback
 from glob import glob
 
 from faster_whisper import WhisperModel
@@ -64,8 +63,8 @@ def execute_asr(input_folder, output_folder, model_size, language, precision):
 
     try:
         model = WhisperModel(model_size, device='cuda', compute_type=precision)
-    except:
-        return print(traceback.format_exc())
+    except Exception as e:
+        return print(f'An error occured while loading the faster-whisper model: {e}')
 
     output = []
     output_file_name = os.path.basename(input_folder)
@@ -90,8 +89,8 @@ def execute_asr(input_folder, output_folder, model_size, language, precision):
 
             output.append(
                 f'{file}|{output_file_name}|{info.language.upper()}|{text}')
-        except:
-            return print(traceback.format_exc())
+        except Exception as e:
+            return print(f'An error occured during transcription: {e}')
 
     with open(output_file_path, 'w', encoding='utf-8') as f:
         f.write('\n'.join(output))

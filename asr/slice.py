@@ -6,22 +6,36 @@ from pydub.silence import split_on_silence
 
 
 class AudioSlicer:
-    def __init__(self, input_file, output_folder, min_length):
+    def __init__(self, input_file, output_folder, min_length, min_silence, silence_thresh, silence_keep):
         self.input_file = input_file
         self.output_folder = output_folder
         self.min_length = min_length
-        self.audio = AudioSegment.from_wav(self.input_file)
+        self.min_silence = min_silence
+        self.silence_thresh = silence_thresh
+        self.silence_keep = silence_keep
+        try:
+            self.audio = AudioSegment.from_wav(self.input_file)
+        except Exception as e:
+            raise Exception(
+                f'An error occured while loading the audio file: {e}')
 
     def slice_audio(self):
         if not os.path.exists(self.output_folder):
             os.makedirs(self.output_folder)
 
-        audio_chunks = split_on_silence(
-            self.audio,
-            min_silence_len=500,
-            silence_thresh=self.audio.dBFS - 16,
-            keep_silence=250
-        )
+        try:
+            audio_chunks = split_on_silence(
+                self.audio,
+                min_silence_len=self.min_silence,
+                silence_thresh=self.audio.dBFS + self.silence_thresh,
+                keep_silence=self.silence_keep
+            )
+        except Exception as e:
+            return print(f'An error occured during audio processing: {e}')
+
+        if not audio_chunks:
+            return print(
+                'No audio chunks were detected. Check silence parameters.')
 
         output_chunks = [audio_chunks[0]]
 
@@ -35,9 +49,12 @@ class AudioSlicer:
             os.path.basename(self.input_file))[0]
 
         for i, chunk in enumerate(output_chunks):
-            chunk.export(os.path.join(self.output_folder,
-                         f'{output_file_name}_{i}.wav'))
-            print(f'Exported {output_file_name}_{i}.wav')
+            try:
+                chunk.export(os.path.join(self.output_folder,
+                                          f'{output_file_name}_{i}.wav'))
+                print(f'Exported {output_file_name}_{i}.wav')
+            except Exception as e:
+                return print(f'Failed to export {output_file_name}_{i}.wav: {e}')
 
         return self.output_folder
 
@@ -50,10 +67,17 @@ if __name__ == '__main__':
                         help='Output folder to store sliced audio clips')
     parser.add_argument('--min_length', type=int, default=5000,
                         help='Minimum length of sliced audio clips in ms (default = 5000)')
+    parser.add_argument('--min_silence', type=int, default=500,
+                        help='Minimum length of silence to be used for split in ms (default = 500)')
+    parser.add_argument('--silence_thresh', type=float, default=-16,
+                        help='Threshold in dbFS under which audio will be considered silence (default = -16)')
+    parser.add_argument('--silence_keep', type=int, default=250,
+                        help='Length of silence in ms to keep at the beginning/end of a chunk')
 
     args = parser.parse_args()
 
-    slicer = AudioSlicer(args.input_file, args.output_folder, args.min_length)
+    slicer = AudioSlicer(args.input_file, args.output_folder,
+                         args.min_length, args.min_silence, args.silence_thresh, args.silence_keep)
     output_path = slicer.slice_audio()
 
     print(f'Audio slicing complete -- files written to {output_path}')

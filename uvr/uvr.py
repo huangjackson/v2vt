@@ -2,7 +2,6 @@
 
 import os
 import argparse
-import traceback
 from glob import glob
 
 from separate import (
@@ -43,48 +42,41 @@ class ModelData():
         return ''
 
 
-def execute_uvr(input_folder, output_folder, model_name='Kim_Vocal_2'):
-    input_paths = [os.path.join(input_folder, name)
-                   for name in os.listdir(input_folder)]
-
+def execute_uvr(input_file, output_folder, model_name='Kim_Vocal_2'):
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
 
     try:
         model = ModelData(model_name)
 
-        for audio_file in input_paths:
-            if not verify_audio(audio_file):
-                print(
-                    f'{os.path.basename(audio_file)} is not a valid .wav file, skipping')
-                continue
+        if not verify_audio(input_file):
+            return print(
+                f'{os.path.basename(input_file)} is not a valid .wav file')
 
-            audio_file_base = os.path.splitext(os.path.basename(audio_file))[0]
+        audio_file_base = os.path.splitext(os.path.basename(input_file))[0]
 
-            process_data = {
-                'export_path': output_folder,
-                'audio_file_base': audio_file_base,
-                'audio_file': audio_file,
-            }
+        process_data = {
+            'export_path': output_folder,
+            'audio_file_base': audio_file_base,
+            'audio_file': input_file,
+        }
 
-            separator = SeparateMDX(model, process_data)
+        separator = SeparateMDX(model, process_data)
 
-            separator.separate()
+        separator.separate()
 
-            print(f'{os.path.basename(audio_file)} UVR complete')
+        clear_gpu_cache()
 
-            clear_gpu_cache()
-
-    except Exception:
-        return print(traceback.format_exc())
+    except Exception as e:
+        return print(f'An error occured during vocal removal: {e}')
 
     return output_folder
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-i', '--input_folder', type=str, required=True,
-                        help='Path to the source folder containing WAV files')
+    parser.add_argument('-i', '--input_file', type=str, required=True,
+                        help='Path to the source WAV file')
     parser.add_argument('-o', '--output_folder', type=str, required=True,
                         help='Output folder to store isolated vocals')
     # parser.add_argument('-m', '--model_name', type=str, default='Kim_Vocal_2',
@@ -93,6 +85,6 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     output_file_path = execute_uvr(
-        args.input_folder, args.output_folder)
+        args.input_file, args.output_folder)
 
     print(f'UVR complete - files written to {output_file_path}')

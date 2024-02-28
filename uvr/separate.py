@@ -3,7 +3,6 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 import os
-import traceback
 import gc
 
 import numpy as np
@@ -35,8 +34,8 @@ def verify_audio(audio_file):
         if os.path.isfile(i):
             try:
                 librosa.load(i, duration=3, mono=False, sr=44100)
-            except Exception:
-                print(traceback.format_exc())
+            except Exception as e:
+                print(f'Failed to load {audio_file}: {e}')
                 is_audio = False
 
     return is_audio
@@ -99,7 +98,7 @@ class SeparateMDX(SeparateAttributes):
             self.export_path, f'{self.audio_file_base}_{self.primary_stem}.wav')
 
         sf.write(primary_stem_path, source.T, samplerate,
-                        subtype='PCM_16')
+                 subtype='PCM_16')
 
         clear_gpu_cache()
 
