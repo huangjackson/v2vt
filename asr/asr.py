@@ -27,7 +27,7 @@ SOFTWARE.
 import os
 import argparse
 import traceback
-import glob
+from glob import glob
 
 from faster_whisper import WhisperModel
 
@@ -69,13 +69,12 @@ def execute_asr(input_folder, output_folder, model_size, language, precision):
 
     output = []
     output_file_name = os.path.basename(input_folder)
-    output_file_path = os.path.abspath(
-        f'{output_folder}/{output_file_name}.list')
+    output_file_path = os.path.join(output_folder, f'{output_file_name}.list')
 
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
 
-    for file in glob.glob(os.path.join(input_folder, '**/*.wav'), recursive=True):
+    for file in glob(os.path.join(input_folder, '**/*.wav'), recursive=True):
         try:
             segments, info = model.transcribe(
                 audio=file,
@@ -103,20 +102,20 @@ def execute_asr(input_folder, output_folder, model_size, language, precision):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-i', '--input_folder', type=str, required=True,
-                        help='Path to the source folder containing WAV files.')
+                        help='Path to folder containing WAV files to transcribe')
     parser.add_argument('-o', '--output_folder', type=str, required=True,
-                        help='Output folder to store transcriptions.')
+                        help='Output folder to store transcriptions')
     parser.add_argument('-s', '--model_size', type=str, default='large-v3',
-                        help='Model size of faster-whisper.')
+                        help='Model size of faster-whisper')
     parser.add_argument('-l', '--language', type=str, default='auto',
                         choices=language_code_list,
-                        help='Language of the source audio files.')
+                        help='Language of the source audio files')
     parser.add_argument('-p', '--precision', type=str, default='float16', choices=['float16', 'float32'],
-                        help='fp16 or fp32')
+                        help='Audio precision (16-bit or 32-bit)')
 
     cmd = parser.parse_args()
 
-    output_file_path = execute_asr(
+    output_path = execute_asr(
         input_folder=cmd.input_folder,
         output_folder=cmd.output_folder,
         model_size=cmd.model_size,
@@ -124,4 +123,4 @@ if __name__ == '__main__':
         precision=cmd.precision,
     )
 
-    print(f'ASR complete - files written to {output_file_path}')
+    print(f'ASR complete - files written to {output_path}')

@@ -2,8 +2,8 @@
 
 import os
 import argparse
-import glob
 import traceback
+from glob import glob
 
 from separate import (
     SeparateMDX, verify_audio, clear_gpu_cache
@@ -36,7 +36,7 @@ class ModelData():
                 "Model not found. Please check the model name and path.")
 
     def get_mdx_model_path(self):
-        for file_name in glob.glob(os.path.join(mdx_models_dir, '**/*.onnx'), recursive=True):
+        for file_name in glob(os.path.join(mdx_models_dir, '**/*.onnx'), recursive=True):
             if self.model_name in file_name:
                 return file_name
 
@@ -84,11 +84,11 @@ def execute_uvr(input_folder, output_folder, model_name='Kim_Vocal_2'):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-i', '--input_folder', type=str, required=True,
-                        help='Path to the source folder containing WAV files.')
+                        help='Path to the source folder containing WAV files')
     parser.add_argument('-o', '--output_folder', type=str, required=True,
-                        help='Output folder to store isolated vocals.')
+                        help='Output folder to store isolated vocals')
     # parser.add_argument('-m', '--model_name', type=str, default='Kim_Vocal_2',
-    #                     help='Name of model to use for vocal separation.')
+    #                     help='Name of model to use for vocal separation')
 
     args = parser.parse_args()
 

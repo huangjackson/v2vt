@@ -58,9 +58,11 @@
 
 demo.mp4
 
+Currently supports English and Chinese
+
 * **Vocal isolation**: Isolation of vocals from source video using deep neural networks
 * **Transcription/translation**: Transcription and translation from source language using whisper
-* **Few-shot voice cloning**: Realistic voice cloning and TTS with as little as 5 seconds of audio from source video (currently supports English and Chinese)
+* **Few-shot voice cloning**: Realistic voice cloning and TTS with as little as 5 seconds of audio from source video
 * **Audio-based lip sync**: Alter faces in source video to match translated audio
 
 
@@ -142,8 +144,10 @@ Instructions included in Colab and live demo. For local installations:
 <!-- ROADMAP -->
 ## Roadmap
 
+- [x] Vocal isolation
+- [x] Transcription
+- [ ] Translation
 - [ ] Voice cloning/TTS
-- [ ] Transcription/translation
 - [ ] Lip sync
 
 See the [open issues](https://github.com/huangjackson/v2vt/issues) for a full list of proposed features (and known issues).

@@ -8,3 +8,4 @@ onnxruntime
 onnxruntime-gpu
 onnx2pytorch
 soundfile==0.12.1
+pydub==0.25.1

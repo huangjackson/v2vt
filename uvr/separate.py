@@ -6,10 +6,10 @@ import os
 import traceback
 import gc
 
-import numpy
+import numpy as np
+import soundfile as sf
 import librosa
 import torch
-import soundfile
 import onnxruntime
 from onnx import load
 from onnx2pytorch import ConvertModel
@@ -43,13 +43,13 @@ def verify_audio(audio_file):
 
 
 def prepare_mix(mix):
-    if not isinstance(mix, numpy.ndarray):
+    if not isinstance(mix, np.ndarray):
         mix, sr = librosa.load(mix, mono=False, sr=44100)
     else:
         mix = mix.T
 
     if mix.ndim == 1:
-        mix = numpy.asfortranarray([mix, mix])
+        mix = np.asfortranarray([mix, mix])
 
     return mix
 
@@ -98,7 +98,7 @@ class SeparateMDX(SeparateAttributes):
         primary_stem_path = os.path.join(
             self.export_path, f'{self.audio_file_base}_{self.primary_stem}.wav')
 
-        soundfile.write(primary_stem_path, source.T, samplerate,
+        sf.write(primary_stem_path, source.T, samplerate,
                         subtype='PCM_16')
 
         clear_gpu_cache()
@@ -120,12 +120,12 @@ class SeparateMDX(SeparateAttributes):
         gen_size = chunk_size-2*self.trim
 
         pad = gen_size + self.trim - ((mix.shape[-1]) % gen_size)
-        mixture = numpy.concatenate((numpy.zeros(
-            (2, self.trim), dtype='float32'), mix, numpy.zeros((2, pad), dtype='float32')), 1)
+        mixture = np.concatenate((np.zeros(
+            (2, self.trim), dtype='float32'), mix, np.zeros((2, pad), dtype='float32')), 1)
 
         step = self.chunk_size - self.n_fft
-        result = numpy.zeros((1, 2, mixture.shape[-1]), dtype=numpy.float32)
-        divider = numpy.zeros((1, 2, mixture.shape[-1]), dtype=numpy.float32)
+        result = np.zeros((1, 2, mixture.shape[-1]), dtype=np.float32)
+        divider = np.zeros((1, 2, mixture.shape[-1]), dtype=np.float32)
         total = 0
 
         for i in range(0, mixture.shape[-1], step):
@@ -135,14 +135,14 @@ class SeparateMDX(SeparateAttributes):
 
             chunk_size_actual = end - start
 
-            window = numpy.hanning(chunk_size_actual)
-            window = numpy.tile(window[None, None, :], (1, 2, 1))
+            window = np.hanning(chunk_size_actual)
+            window = np.tile(window[None, None, :], (1, 2, 1))
 
             mix_part_ = mixture[:, start:end]
             if end != i + chunk_size:
                 pad_size = (i + chunk_size) - end
-                mix_part_ = numpy.concatenate(
-                    (mix_part_, numpy.zeros((2, pad_size), dtype='float32')), axis=-1)
+                mix_part_ = np.concatenate(
+                    (mix_part_, np.zeros((2, pad_size), dtype='float32')), axis=-1)
 
             mix_part = torch.tensor(
                 mix_part_, dtype=torch.float32).unsqueeze(0).to(self.device)
@@ -161,8 +161,8 @@ class SeparateMDX(SeparateAttributes):
         tar_waves = result / (divider + epsilon)
         tar_waves_.append(tar_waves)
 
-        tar_waves_ = numpy.vstack(tar_waves_)[:, :, self.trim:-self.trim]
-        tar_waves = numpy.concatenate(tar_waves_, axis=-1)[:, :mix.shape[-1]]
+        tar_waves_ = np.vstack(tar_waves_)[:, :, self.trim:-self.trim]
+        tar_waves = np.concatenate(tar_waves_, axis=-1)[:, :mix.shape[-1]]
 
         source = tar_waves[:, 0:None]
 
