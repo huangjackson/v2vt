@@ -13,10 +13,10 @@ import onnxruntime
 from onnx import load
 from onnx2pytorch import ConvertModel
 
-from stft import STFT
+from .stft import STFT
 
 if TYPE_CHECKING:
-    from uvr import ModelData
+    from .uvr import ModelData
 
 
 def clear_gpu_cache():

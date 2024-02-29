@@ -4,7 +4,7 @@ import os
 import argparse
 from glob import glob
 
-from separate import (
+from .separate import (
     SeparateMDX, verify_audio, clear_gpu_cache
 )
 
@@ -12,7 +12,7 @@ script_dir = os.path.dirname(os.path.realpath(__file__))
 mdx_models_dir = os.path.join(script_dir, 'models')
 
 
-class ModelData():
+class ModelData:
 
     def __init__(self, model_name: str):
         self.model_name = model_name
@@ -42,35 +42,41 @@ class ModelData():
         return ''
 
 
-def execute_uvr(input_file, output_folder, model_name='Kim_Vocal_2'):
-    if not os.path.exists(output_folder):
-        os.makedirs(output_folder)
+class UltimateVocalRemover:
 
-    try:
-        model = ModelData(model_name)
+    def __init__(self, input_file, output_folder, model_name='Kim_Vocal_2'):
+        self.input_file = input_file
+        self.output_folder = output_folder
+        self.model_name = model_name
 
-        if not verify_audio(input_file):
-            return print(
-                f'{os.path.basename(input_file)} is not a valid .wav file')
+    def execute(self):
+        if not os.path.exists(self.output_folder):
+            os.makedirs(self.output_folder)
 
-        audio_file_base = os.path.splitext(os.path.basename(input_file))[0]
+        try:
+            model = ModelData(self.model_name)
 
-        process_data = {
-            'export_path': output_folder,
-            'audio_file_base': audio_file_base,
-            'audio_file': input_file,
-        }
+            if not verify_audio(self.input_file):
+                return print(
+                    f'{os.path.basename(self.input_file)} is not a valid .wav file')
 
-        separator = SeparateMDX(model, process_data)
+            audio_file_base = os.path.splitext(
+                os.path.basename(self.input_file))[0]
 
-        separator.separate()
+            process_data = {
+                'export_path': self.output_folder,
+                'audio_file_base': audio_file_base,
+                'audio_file': self.input_file,
+            }
 
-        clear_gpu_cache()
+            separator = SeparateMDX(model, process_data)
+            separator.separate()
+            clear_gpu_cache()
 
-    except Exception as e:
-        return print(f'An error occured during vocal removal: {e}')
+        except Exception as e:
+            return print(f'An error occurred during vocal removal: {e}')
 
-    return output_folder
+        return self.output_folder
 
 
 if __name__ == '__main__':
@@ -84,7 +90,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    output_file_path = execute_uvr(
-        args.input_file, args.output_folder)
+    uvr = UltimateVocalRemover(args.input_file, args.output_folder)
+    output_file_path = uvr.execute()
 
     print(f'UVR complete - files written to {output_file_path}')

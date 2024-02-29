@@ -5,7 +5,8 @@ from pydub import AudioSegment
 from pydub.silence import split_on_silence
 
 
-class AudioSlicer:
+class Slicer:
+    
     def __init__(self, input_file, output_folder, min_length, min_silence, silence_thresh, silence_keep):
         self.input_file = input_file
         self.output_folder = output_folder
@@ -19,7 +20,7 @@ class AudioSlicer:
             raise Exception(
                 f'An error occured while loading the audio file: {e}')
 
-    def slice_audio(self):
+    def slice(self):
         if not os.path.exists(self.output_folder):
             os.makedirs(self.output_folder)
 
@@ -76,8 +77,8 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    slicer = AudioSlicer(args.input_file, args.output_folder,
+    slicer = Slicer(args.input_file, args.output_folder,
                          args.min_length, args.min_silence, args.silence_thresh, args.silence_keep)
-    output_path = slicer.slice_audio()
+    output_path = slicer.slice()
 
     print(f'Audio slicing complete -- files written to {output_path}')

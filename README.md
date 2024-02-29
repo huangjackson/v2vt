@@ -79,7 +79,7 @@ Visit the [HuggingFace demo][huggingface-url]. Note that if there are any other 
 
 ### Build Locally
 
-Currently only tested in a Windows 11 environment with Python 3.9, PyTorch 2.1.1, CUDA 11.8. Requires an NVIDIA GPU.
+Currently only tested in a Windows 11 environment with Python 3.9, PyTorch 2.1.1, CUDA 11.8.
 
 #### Prerequisites
 
@@ -127,7 +127,7 @@ Instructions included in Colab and live demo. For local installations:
     ```
 2. Run CLI
     ```sh
-    python cli.py --help
+    python v2vt.py --help
     ```
 
 #### Local Installation - Web UI
@@ -198,6 +198,7 @@ Special thanks to the following projects:
 * [video-retalking](https://github.com/OpenTalker/video-retalking)
 * [hifi-gan](https://github.com/jik876/hifi-gan)
 * [FFmpeg](https://github.com/FFmpeg/FFmpeg)
+* [ffmpeg-python](https://github.com/kkroening/ffmpeg-python)
 * [Best-README-Template](https://github.com/othneildrew/Best-README-Template)
 
 
