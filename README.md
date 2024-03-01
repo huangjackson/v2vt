@@ -119,7 +119,7 @@ Note: it is recommended to install within an environment to prevent compatibilit
 
 Instructions included in Colab and live demo. For local installations:
 
-#### Local Installation - CLI
+### Local Installation - CLI
 
 1. Navigate to directory
     ```sh
@@ -130,16 +130,7 @@ Instructions included in Colab and live demo. For local installations:
     python v2vt.py --help
     ```
 
-#### Local Installation - Web UI
 
-1. Navigate to directory
-    ```sh
-    cd v2vt
-    ```
-2. Run Web UI server
-    ```sh
-    python webui.py
-    ```
 
 <!-- ROADMAP -->
 ## Roadmap
@@ -196,9 +187,7 @@ Special thanks to the following projects:
 * [KUIELab & Woosung Choi](https://github.com/kuielab) - For the original MDX-Net music demixing model
 * [KimberleyJensen](https://github.com/KimberleyJensen) - For the Kim Vocal 2 MDX-Net model (used in uvr/models)
 * [video-retalking](https://github.com/OpenTalker/video-retalking)
-* [hifi-gan](https://github.com/jik876/hifi-gan)
 * [FFmpeg](https://github.com/FFmpeg/FFmpeg)
-* [ffmpeg-python](https://github.com/kkroening/ffmpeg-python)
 * [Best-README-Template](https://github.com/othneildrew/Best-README-Template)
 
 
