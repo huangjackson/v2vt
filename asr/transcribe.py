@@ -25,6 +25,7 @@ SOFTWARE.
 """
 
 import os
+import re
 import argparse
 from glob import glob
 
@@ -33,6 +34,10 @@ from faster_whisper import WhisperModel
 
 # Required to prevent error
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'TRUE'
+
+
+def natsort(s): return [int(t) if t.isdigit()
+                        else t.lower() for t in re.split('(\d+)', s)]
 
 
 class Transcriber:
@@ -62,7 +67,7 @@ class Transcriber:
         if not os.path.exists(self.output_folder):
             os.makedirs(self.output_folder)
 
-        for file in glob(os.path.join(self.input_folder, '**/*.wav'), recursive=True):
+        for file in sorted(glob(os.path.join(self.input_folder, '**/*.wav'), recursive=True), key=natsort):
             try:
                 segments, info = self.model.transcribe(
                     audio=file,
