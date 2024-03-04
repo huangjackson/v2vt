@@ -8,3 +8,6 @@ tests/
 
 # Jupyter Notebook
 .ipynb_checkpoints
+
+# VSCode
+.vscode/

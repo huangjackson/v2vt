@@ -1,7 +1,9 @@
 <!-- README.md template from https://github.com/othneildrew/Best-README-Template-->
 
+
 > [!WARNING]
 > Please note that this project is currently under active development and is not yet operational. Features may be incomplete, and functionality is not guaranteed.
+
 
 <!-- PROJECT SHIELDS -->
 [![Colab][colab-shield]][colab-url]
@@ -27,7 +29,6 @@
 </div>
 
 
-
 <!-- TABLE OF CONTENTS -->
 <details>
   <summary>Table of Contents</summary>
@@ -51,7 +52,6 @@
     <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
 </details>
-
 
 
 <!-- ABOUT THE PROJECT -->
@@ -84,35 +84,33 @@ Currently only tested in a Windows 11 environment with Python 3.9, PyTorch 2.1.1
 
 #### Prerequisites
 
-Note: it is recommended to install within an environment to prevent compatibility issues (via Anaconda: `conda create -n v2vt` and `conda activate v2vt`)
+Note: it is recommended to install within an environment to prevent compatibility issues (via Anaconda: `conda create -n v2vt python=3.9` and `conda activate v2vt`)
 
 * ffmpeg
   ```sh
   conda install ffmpeg
   ```
-  or
+* CMake
   ```sh
-  choco install ffmpeg
+  conda install cmake
   ```
 * pytorch & CUDA
   ```sh
   conda install pytorch==2.1.1 torchvision==0.16.1 torchaudio==2.1.1 pytorch-cuda=11.8 -c pytorch -c nvidia
   ```
-* rust (may not be necessary -- install if you see errors)
-  https://www.rust-lang.org/learn/get-started
 
 #### Installation
 
 1. Install prerequisites
 2. Clone the repo
-   ```sh
-   git clone https://github.com/huangjackson/v2vt.git
-   ```
+  ```sh
+  git clone https://github.com/huangjackson/v2vt.git
+  cd v2vt
+  ```
 3. Install from requirements.txt
-   ```sh
-   pip install -r requirements.txt
-   ```
-
+  ```sh
+  pip install -r requirements.txt
+  ```
 
 
 <!-- USAGE -->
@@ -123,14 +121,13 @@ Instructions included in Colab and live demo. For local installations:
 ### Local Installation - CLI
 
 1. Navigate to directory
-    ```sh
-    cd v2vt
-    ```
+  ```sh
+  cd v2vt
+  ```
 2. Run CLI
-    ```sh
-    python v2vt.py --help
-    ```
-
+  ```sh
+  python v2vt.py --help
+  ```
 
 
 <!-- ROADMAP -->
@@ -145,7 +142,6 @@ Instructions included in Colab and live demo. For local installations:
 See the [open issues](https://github.com/huangjackson/v2vt/issues) for a full list of proposed features (and known issues).
 
 
-
 <!-- CONTRIBUTING -->
 ## Contributing
 
@@ -158,7 +154,6 @@ If you have a suggestion that would make this better, please fork the repo and c
 3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
-
 
 
 <!-- LICENSE -->
@@ -176,11 +171,10 @@ Jackson Huang - wboh010@gmail.com
 Project Link: [https://github.com/huangjackson/v2vt](https://github.com/huangjackson/v2vt)
 
 
-
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
 
-Special thanks to the following projects:
+Special thanks to the following people and projects:
 
 * [GPT-SoVITS](https://github.com/RVC-Boss/GPT-SoVITS)
 * [faster-whisper](https://github.com/SYSTRAN/faster-whisper)
@@ -189,6 +183,7 @@ Special thanks to the following projects:
 * [KimberleyJensen](https://github.com/KimberleyJensen) - For the Kim Vocal 2 MDX-Net model (used in uvr/models)
 * [video-retalking](https://github.com/OpenTalker/video-retalking)
 * [FFmpeg](https://github.com/FFmpeg/FFmpeg)
+* [Marian-NMT](https://github.com/marian-nmt/marian)
 * [Best-README-Template](https://github.com/othneildrew/Best-README-Template)
 
 

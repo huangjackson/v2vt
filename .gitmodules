@@ -1,0 +1,3 @@
+[submodule "marian"]
+	path = marian
+	url = https://github.com/huangjackson/marian.git
