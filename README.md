@@ -90,10 +90,6 @@ Note: it is recommended to install within an environment to prevent compatibilit
   ```sh
   conda install ffmpeg
   ```
-* CMake
-  ```sh
-  conda install cmake
-  ```
 * pytorch & CUDA
   ```sh
   conda install pytorch==2.1.1 torchvision==0.16.1 torchaudio==2.1.1 pytorch-cuda=11.8 -c pytorch -c nvidia
@@ -111,6 +107,8 @@ Note: it is recommended to install within an environment to prevent compatibilit
   ```sh
   pip install -r requirements.txt
   ```
+4. Download models
+  <!-- TODO -->
 
 
 <!-- USAGE -->
@@ -183,7 +181,8 @@ Special thanks to the following people and projects:
 * [KimberleyJensen](https://github.com/KimberleyJensen) - For the Kim Vocal 2 MDX-Net model (used in uvr/models)
 * [video-retalking](https://github.com/OpenTalker/video-retalking)
 * [FFmpeg](https://github.com/FFmpeg/FFmpeg)
-* [Marian-NMT](https://github.com/marian-nmt/marian)
+* [CTranslate2](https://github.com/OpenNMT/CTranslate2)
+* [Opus-MT](https://github.com/Helsinki-NLP/Opus-MT)
 * [Best-README-Template](https://github.com/othneildrew/Best-README-Template)
 
 
