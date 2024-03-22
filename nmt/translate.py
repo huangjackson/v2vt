@@ -3,8 +3,10 @@ import sentencepiece as spm
 import torch
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
-translator = ctranslate2.Translator('models/', device=device)
-sp = spm.SentencePieceProcessor('models/source.spm')
+
+# Temporarily hard-coded paths, only en-zh
+translator = ctranslate2.Translator('models/en-zh', device=device)
+sp = spm.SentencePieceProcessor('models/en-zh/source.spm')
 
 # Temporary placeholder
 input_text = 'I want to wish you all a very happy Thanksgiving!'
