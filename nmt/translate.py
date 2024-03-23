@@ -14,16 +14,21 @@ class Translator:
         self.input_file = input_file
         self.output_file = output_file
         self.model_name = model_name
-        self.model_path = self.find_model_path()
+        self.model_path = self.get_model_path()
         self.model = ctranslate2.Translator(
             self.model_path, device=self.device)
         self.sp = spm.SentencePieceProcessor(f'{self.model_path}/source.spm')
 
-    def find_model_path(self):
-        current_dir = os.path.dirname(os.path.realpath(__file__))
-        model_path = os.path.join(current_dir, 'models', self.model_name)
-        if not os.path.exists(model_path):
-            raise Exception(f"Model path {model_path} does not exist.")
+    def get_model_path(self):
+        script_dir = os.path.dirname(os.path.realpath(__file__))
+        model_path = os.path.join(script_dir, 'models', self.model_name)
+        required_files = ['model.bin', 'config.json',
+                          'shared_vocabulary.json', 'source.spm', 'target.spm']
+
+        if not all(os.path.exists(os.path.join(model_path, file)) for file in required_files):
+            raise Exception(
+                "One or more model files are missing. Please check the models directory.")
+
         return model_path
 
     def translate_text(self, input_text):

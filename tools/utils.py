@@ -1,6 +1,10 @@
+import os
 import sys
 import subprocess
 import warnings
+import shutil
+
+from huggingface_hub import snapshot_download
 
 
 def is_ffmpeg_installed():
@@ -41,3 +45,31 @@ def check_dependencies():
     if not cuda:
         warnings.warn(
             'Warning: No CUDA-compatible GPU detected. An NVIDIA GPU is highly recommended.')
+
+
+# TODO: use this in install script to download all models
+def download_model_from_hf(repo_id, output_dir):
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+    model_folder = snapshot_download(repo_id=repo_id)
+
+    exclude_files = ['.gitattributes', 'README.md']
+
+    for dirpath, dirnames, filenames in os.walk(model_folder):
+        for filename in filenames:
+            if filename in exclude_files:
+                continue
+            file_path = os.path.join(dirpath, filename)
+
+            # Snapshots are symlinks, so we need to resolve the real path
+            real_path = os.path.realpath(file_path)
+            relative_dir = os.path.relpath(dirpath, model_folder)
+            dest_dir = os.path.join(output_dir, relative_dir)
+
+            os.makedirs(dest_dir, exist_ok=True)
+            shutil.copy(real_path, os.path.join(dest_dir, filename))
+            print(
+                f'Copying {real_path} to {os.path.join(dest_dir, filename)}')
+
+    print(f'Downloaded model to {output_dir}')
