@@ -1,20 +1,67 @@
+import os
+import argparse
+
 import ctranslate2
 import sentencepiece as spm
 import torch
 
-device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-# Temporarily hard-coded paths, only en-zh
-translator = ctranslate2.Translator('models/en-zh', device=device)
-sp = spm.SentencePieceProcessor('models/en-zh/source.spm')
+class Translator:
 
-# Temporary placeholder
-input_text = 'I want to wish you all a very happy Thanksgiving!'
-input_tokens = sp.encode(input_text, out_type=str)
+    def __init__(self, input_file, output_file, model_name, device=None):
+        self.device = device if device else (
+            'cuda' if torch.cuda.is_available() else 'cpu')
+        self.input_file = input_file
+        self.output_file = output_file
+        self.model_name = model_name
+        self.model_path = self.find_model_path()
+        self.model = ctranslate2.Translator(
+            self.model_path, device=self.device)
+        self.sp = spm.SentencePieceProcessor(f'{self.model_path}/source.spm')
 
-results = translator.translate_batch([input_tokens])
+    def find_model_path(self):
+        current_dir = os.path.dirname(os.path.realpath(__file__))
+        model_path = os.path.join(current_dir, 'models', self.model_name)
+        if not os.path.exists(model_path):
+            raise Exception(f"Model path {model_path} does not exist.")
+        return model_path
 
-output_tokens = results[0].hypotheses[0]
-output_text = sp.decode(output_tokens)
+    def translate_text(self, input_text):
+        try:
+            input_tokens = self.sp.encode(input_text, out_type=str)
+            results = self.model.translate_batch([input_tokens])
+            output_tokens = results[0].hypotheses[0]
+            return self.sp.decode(output_tokens)
+        except Exception as e:
+            print(f'Error translating text: {e}')
+            return None
 
-print(output_text)
+    def translate(self):
+        if not os.path.exists(self.input_file):
+            raise Exception(f'Input file {self.input_file} does not exist.')
+        try:
+            with open(self.input_file, 'r', encoding='utf-8') as i, open(self.output_file, 'w', encoding='utf-8') as o:
+                for line in i:
+                    translated_line = self.translate_text(line.strip())
+                    if translated_line is not None:
+                        o.write(translated_line + '\n')
+            return self.output_file
+        except Exception as e:
+            print(f'Error translating file: {e}')
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-i', '--input_file', type=str, required=True,
+                        help='Path to the source text file to translate')
+    parser.add_argument('-o', '--output_file', type=str, required=True,
+                        help='Path to the translated output text file')
+    parser.add_argument('-m', '--model_name', type=str, required=True, choices=['en-zh', 'zh-en'],
+                        help='Translation model used (en-zh or zh-en)')
+
+    args = parser.parse_args()
+
+    translator = Translator(args.input_file, args.output_file, args.model_name)
+    output_file_path = translator.translate()
+
+    print(f'Translation complete - files written to {output_file_path}')

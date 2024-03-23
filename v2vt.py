@@ -8,9 +8,11 @@ from tools.utils import (
 from tools.ffmpeg import (
     extract_audio
 )
+
 from vr.uvr import UltimateVocalRemover
 from asr.slice import Slicer
 from asr.transcribe import Transcriber
+from nmt.translate import Translator
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
