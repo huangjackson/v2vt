@@ -3,7 +3,7 @@ import argparse
 import tempfile
 
 from tools.utils import (
-    check_dependencies
+    check_dependencies, check_models_and_install
 )
 from tools.ffmpeg import (
     extract_audio
@@ -24,6 +24,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     check_dependencies()
+    check_models_and_install()
 
     try:
         # TODO: Replace args.output with tempfile, args.output should be final output (translated video)

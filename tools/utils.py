@@ -47,7 +47,6 @@ def check_dependencies():
             'Warning: No CUDA-compatible GPU detected. An NVIDIA GPU is highly recommended.')
 
 
-# TODO: use this in install script to download all models
 def download_model_from_hf(repo_id, output_dir):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
@@ -73,3 +72,27 @@ def download_model_from_hf(repo_id, output_dir):
                 f'Copying {real_path} to {os.path.join(dest_dir, filename)}')
 
     print(f'Downloaded model to {output_dir}')
+
+
+def check_models_and_install():
+    script_dir = os.path.dirname(os.path.realpath(__file__))
+    nmt_models_path = os.path.join(script_dir, '../nmt/models')
+    vr_models_path = os.path.join(script_dir, '../vr/models')
+
+    nmt_required_files = ['model.bin', 'config.json',
+                          'shared_vocabulary.json', 'source.spm', 'target.spm']
+    vr_required_files = ['Kim_Vocal_2.onnx']
+
+    # Check for translation models
+    for model_folder in os.listdir(nmt_models_path):
+        model_path = os.path.join(nmt_models_path, model_folder)
+        if os.path.isdir(model_path):
+            if not all(os.path.exists(os.path.join(model_path, file)) for file in nmt_required_files):
+                print('Translation models not found. Downloading from HuggingFace...')
+                download_model_from_hf(
+                    'huangjackson/ct2-opus-mt', nmt_models_path)
+
+    # Check for vocal removal model
+    if not all(os.path.exists(os.path.join(vr_models_path, file)) for file in vr_required_files):
+        print('Vocal removal model not found. Downloading from HuggingFace...')
+        download_model_from_hf('huangjackson/Kim_Vocal_2', vr_models_path)
