@@ -33,17 +33,8 @@
 <details>
   <summary>Table of Contents</summary>
   <ol>
-    <li>
-      <a href="#features">Features</a>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#colab">Colab</a></li>
-        <li><a href="#live-demo">Live Demo</a></li>
-        <li><a href="#build-locally">Build Locally</a></li>
-      </ul>
-    </li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#getting-started">Getting Started</a></li>
     <li><a href="#usage">Usage</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
@@ -70,19 +61,9 @@ Currently supports English and Chinese
 <!-- GETTING STARTED -->
 ## Getting Started
 
-### Colab
-
-Visit the [Colab][colab-url] and make a copy. Requires a GPU runtime.
-
-### Live Demo
-
-Visit the [HuggingFace demo][huggingface-url]. Note that if there are any other active users, there will be a queue (avoidable by making a copy and running it on your own runtime).
-
-### Build Locally
-
 Currently only tested in a Windows 11 environment with Python 3.9, PyTorch 2.1.1, CUDA 11.8.
 
-#### Prerequisites
+### Prerequisites
 
 Note: it is recommended to install within an environment to prevent compatibility issues (via Anaconda: `conda create -n v2vt python=3.9` and `conda activate v2vt`)
 
@@ -95,7 +76,7 @@ Note: it is recommended to install within an environment to prevent compatibilit
   conda install pytorch==2.1.1 torchvision==0.16.1 torchaudio==2.1.1 pytorch-cuda=11.8 -c pytorch -c nvidia
   ```
 
-#### Installation
+### Installation
 
 1. Install prerequisites
 2. Clone the repo
@@ -107,7 +88,9 @@ Note: it is recommended to install within an environment to prevent compatibilit
   ```sh
   pip install -r requirements.txt
   ```
-4. Pretrained models\
+
+#### If you get model errors:
+  
   Download [vocal removal model](https://huggingface.co/huangjackson/Kim_Vocal_2) and place in `v2vt/vr/models`.\
   Download [translation models](https://huggingface.co/huangjackson/ct2-opus-mt) and place in `v2vt/nmt/models`.
 
