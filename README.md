@@ -117,7 +117,7 @@ Instructions included in Colab and live demo. For local installations:
 
 - [x] Vocal isolation
 - [x] Transcription
-- [ ] Translation
+- [x] Translation
 - [ ] Voice cloning/TTS
 - [ ] Lip sync
 
