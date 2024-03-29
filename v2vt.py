@@ -1,6 +1,5 @@
 import sys
 import argparse
-import tempfile
 
 from tools.utils import (
     check_dependencies, check_models_and_install
@@ -27,7 +26,6 @@ if __name__ == '__main__':
     check_models_and_install()
 
     try:
-        # TODO: Replace args.output with tempfile, args.output should be final output (translated video)
         extract_audio(args.input, args.output)
     except Exception as e:
         print(
