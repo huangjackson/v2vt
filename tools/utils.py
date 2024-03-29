@@ -78,10 +78,19 @@ def check_models_and_install():
     script_dir = os.path.dirname(os.path.realpath(__file__))
     nmt_models_path = os.path.join(script_dir, '../nmt/models')
     vr_models_path = os.path.join(script_dir, '../vr/models')
+    tts_models_path = os.path.join(script_dir, '../tts/models/pretrained')
 
     nmt_required_files = ['model.bin', 'config.json',
                           'shared_vocabulary.json', 'source.spm', 'target.spm']
     vr_required_files = ['Kim_Vocal_2.onnx']
+    tts_required_files = ['s2G488k.pth',
+                          's1bert25hz-2kh-longer-epoch=68e-step=50232.ckpt',
+                          'chinese-hubert-base/config.json',
+                          'chinese-hubert-base/preprocessor_config.json',
+                          'chinese-hubert-base/pytorch_model.bin',
+                          'chinese-roberta-wwm-ext-large/config.json',
+                          'chinese-roberta-wwm-ext-large/tokenizer.json',
+                          'chinese-roberta-wwm-ext-large/pytorch_model.bin']
 
     # Check for translation models
     for model_folder in os.listdir(nmt_models_path):
@@ -96,3 +105,8 @@ def check_models_and_install():
     if not all(os.path.exists(os.path.join(vr_models_path, file)) for file in vr_required_files):
         print('Vocal removal model not found. Downloading from HuggingFace...')
         download_model_from_hf('huangjackson/Kim_Vocal_2', vr_models_path)
+
+    # Check for TTS models
+    if not all(os.path.exists(os.path.join(tts_models_path, file)) for file in tts_required_files):
+        print('TTS pretrained models not found. Downloading from HuggingFace...')
+        download_model_from_hf('lj1995/GPT-SoVITS', tts_models_path)

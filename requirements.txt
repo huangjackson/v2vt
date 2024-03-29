@@ -11,4 +11,11 @@ onnxruntime-gpu
 onnx2pytorch
 soundfile==0.12.1
 pydub==0.25.1
+transformers
 huggingface_hub==0.21.4
+wordsegment
+g2p-en
+nltk
+cn2an
+pypinyin
+jieba-fast
