@@ -3,11 +3,13 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# Development
-dev/
+# Models / temporary files
+TEMP/
 *.bin
 *.spm
 *.onnx
+*.pth
+*.ckpt
 **/models/**/*.json
 
 # Jupyter Notebook

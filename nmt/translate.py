@@ -27,7 +27,7 @@ class Translator:
 
         if not all(os.path.exists(os.path.join(model_path, file)) for file in required_files):
             raise Exception(
-                "One or more model files are missing. Please check the models directory.")
+                'One or more model files are missing. Please check the models directory.')
 
         return model_path
 

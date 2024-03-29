@@ -33,7 +33,7 @@ class ModelData:
         model_path = os.path.join(script_dir, 'models', self.model_name)
         if not os.path.exists(model_path):
             raise Exception(
-                "Model not found. Please check the models directory.")
+                'Model not found. Please check the models directory.')
         return model_path
 
 

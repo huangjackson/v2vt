@@ -58,7 +58,7 @@ class Transcriber:
 
         dataset_file_name = os.path.basename(self.input_folder)
         dataset_file_path = os.path.join(
-            self.output_folder, f'{dataset_file_name}.list')
+            self.output_folder, 'transcribed.list')
 
         if not os.path.exists(self.output_folder):
             os.makedirs(self.output_folder)
