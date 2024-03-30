@@ -36,7 +36,7 @@ class GetText:
         self.output_folder = output_folder
         self.roberta_path = roberta_path
 
-        self.txt_path = os.path.join(self.output_folder, 'gettext.txt')
+        self.txt_path = os.path.join(self.output_folder, 'get-text.txt')
         self.bert_dir = os.path.join(self.output_folder, 'bert')
 
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
