@@ -20,3 +20,4 @@ cn2an==0.5.22
 pypinyin==0.51.0
 jieba-fast==0.53
 scipy==1.12.0
+einops==0.7.0
