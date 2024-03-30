@@ -12,4 +12,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ..zh_normalization.text_normlization import *
+from .text_normalization import *

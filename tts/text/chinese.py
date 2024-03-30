@@ -28,7 +28,7 @@ from pypinyin import lazy_pinyin, Style
 
 from .symbols import punctuation
 from .tone_sandhi import ToneSandhi
-from .zh_normalization.text_normlization import TextNormalizer
+from .zh_normalization.text_normalization import TextNormalizer
 
 normalizer = lambda x: cn2an.transform(x, "an2cn")
 

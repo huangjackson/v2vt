@@ -45,9 +45,7 @@ class GetText:
             self.tokenizer = AutoTokenizer.from_pretrained(
                 self.roberta_path)
             self.bert_model = AutoModelForMaskedLM.from_pretrained(
-                self.roberta_path)
-
-            self.bert_model.to(self.device)
+                self.roberta_path).to(self.device)
         except Exception as e:
             raise Exception(f'Error while loading roberta model: {e}')
 
