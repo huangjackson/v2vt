@@ -1,5 +1,4 @@
 import os
-import argparse
 
 import ctranslate2
 import sentencepiece as spm
@@ -53,20 +52,3 @@ class Translator:
             return self.output_file
         except Exception as e:
             print(f'Error translating file: {e}')
-
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-i', '--input_file', type=str, required=True,
-                        help='Path to the source text file to translate')
-    parser.add_argument('-o', '--output_file', type=str, required=True,
-                        help='Path to the translated output text file')
-    parser.add_argument('-m', '--model_name', type=str, required=True, choices=['en-zh', 'zh-en'],
-                        help='Translation model used (en-zh or zh-en)')
-
-    args = parser.parse_args()
-
-    translator = Translator(args.input_file, args.output_file, args.model_name)
-    output_file_path = translator.translate()
-
-    print(f'Translation complete - files written to {output_file_path}')

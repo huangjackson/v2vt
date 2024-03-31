@@ -22,7 +22,6 @@
 
 import os
 import re
-import argparse
 from glob import glob
 
 import torch
@@ -38,7 +37,7 @@ def natsort(s): return [int(t) if t.isdigit()
 
 class Transcriber:
 
-    def __init__(self, input_folder, output_folder, model_size, language, precision):
+    def __init__(self, input_folder, output_folder, model_size='large-v3', language='auto', precision='float16'):
         self.input_folder = input_folder
         self.output_folder = output_folder
         self.model_size = model_size
@@ -83,33 +82,3 @@ class Transcriber:
             f.write('\n'.join(dataset))
 
         return self.output_folder
-
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-i', '--input_folder', type=str, required=True,
-                        help='Path to folder containing WAV files to transcribe')
-    parser.add_argument('-o', '--output_folder', type=str, required=True,
-                        help='Output folder to store transcriptions')
-    parser.add_argument('-s', '--model_size', type=str, default='large-v3',
-                        help='Model size of faster-whisper')
-    parser.add_argument('-l', '--language', type=str, default='auto',
-                        choices=['en', 'zh', 'auto'],
-                        help='Language of the source audio files')
-    parser.add_argument('-p', '--precision', type=str, default='float16',
-                        choices=['float16', 'float32'],
-                        help='Audio precision (16-bit or 32-bit)')
-
-    args = parser.parse_args()
-
-    transcriber = Transcriber(
-        input_folder=args.input_folder,
-        output_folder=args.output_folder,
-        model_size=args.model_size,
-        language=args.language,
-        precision=args.precision,
-    )
-
-    output_path = transcriber.transcribe()
-
-    print(f'ASR complete - files written to {output_path}')

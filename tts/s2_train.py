@@ -20,6 +20,19 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import os
+import json
+from random import randint
+
+import torch.distributed as dist
+import torch
+from torch.nn import functional as F
+from torch.nn.parallel import DistributedDataParallel as DDP
+from torch.cuda.amp import autocast, GradScaler
+from torch.utils.data import DataLoader
+from torch.utils.tensorboard import SummaryWriter
+from tqdm import tqdm
+
 from .module import commons
 from .module.mel_processing import mel_spectrogram_torch, spec_to_mel_torch
 from .module.losses import feature_loss, generator_loss, discriminator_loss, kl_loss
@@ -43,17 +56,6 @@ from .utils import (
     savee,
 )
 from .config import ModelData
-from tqdm import tqdm
-from torch.nn.parallel import DistributedDataParallel as DDP
-from torch.cuda.amp import autocast, GradScaler
-from torch.utils.data import DataLoader
-from torch.utils.tensorboard import SummaryWriter
-from torch.nn import functional as F
-import torch.distributed as dist
-import torch
-import os
-import json
-from random import randint
 
 # Prevent module not found error when loading pretrained models
 import sys

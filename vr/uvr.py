@@ -1,8 +1,6 @@
 # Includes modified code from https://github.com/Anjok07/ultimatevocalremovergui
 
 import os
-import argparse
-from glob import glob
 
 from .separate import (
     SeparateMDX, verify_audio, clear_gpu_cache
@@ -72,20 +70,3 @@ class UltimateVocalRemover:
             return print(f'An error occurred during vocal removal: {e}')
 
         return self.output_folder
-
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-i', '--input_file', type=str, required=True,
-                        help='Path to the source WAV file')
-    parser.add_argument('-o', '--output_folder', type=str, required=True,
-                        help='Output folder to store isolated vocals')
-    # parser.add_argument('-m', '--model_name', type=str, default='Kim_Vocal_2.onnx',
-    #                     help='Name of model to use for vocal separation')
-
-    args = parser.parse_args()
-
-    uvr = UltimateVocalRemover(args.input_file, args.output_folder)
-    output_file_path = uvr.execute()
-
-    print(f'UVR complete - files written to {output_file_path}')

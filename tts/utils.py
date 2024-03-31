@@ -25,13 +25,12 @@ import sys
 import logging
 import json
 import glob
-
 from collections import OrderedDict
 
 import torch
 
-logging.getLogger("numba").setLevel(logging.ERROR)
-logging.getLogger("matplotlib").setLevel(logging.ERROR)
+logging.getLogger('numba').setLevel(logging.ERROR)
+logging.getLogger('matplotlib').setLevel(logging.ERROR)
 
 MATPLOTLIB_FLAG = False
 
@@ -226,7 +225,7 @@ def summarize(
     for k, v in histograms.items():
         writer.add_histogram(k, v, global_step)
     for k, v in images.items():
-        writer.add_image(k, v, global_step, dataformats="HWC")
+        writer.add_image(k, v, global_step, dataformats='HWC')
     for k, v in audios.items():
         writer.add_audio(k, v, global_step, audio_sampling_rate)
 

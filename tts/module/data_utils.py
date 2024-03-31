@@ -46,9 +46,9 @@ class TextAudioSpeakerLoader(torch.utils.data.Dataset):
 
     def __init__(self, hparams, val=False):
         exp_dir = hparams.exp_dir
-        self.path_a_text = "%s/../1-preproc/get-text.txt" % exp_dir
-        self.path_b_hubert = "%s/../1-preproc/hubert" % exp_dir
-        self.path_b_wav32k = "%s/../1-preproc/wav32k" % exp_dir
+        self.path_a_text = os.path.join(exp_dir, '../1-preproc/get-text.txt')
+        self.path_b_hubert = os.path.join(exp_dir, '../1-preproc/hubert')
+        self.path_b_wav32k = os.path.join(exp_dir, '../1-preproc/wav32k')
         assert os.path.exists(self.path_a_text)
         assert os.path.exists(self.path_b_hubert)
         assert os.path.exists(self.path_b_wav32k)

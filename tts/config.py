@@ -12,7 +12,7 @@ class ModelData:
         self.tmp_dir = os.path.join(self.project_dir, 'TEMP')
         self.out_dir = os.path.join(self.project_dir, 'logs')
 
-        # TODO: Assign path to models (SoVITS: v2vt/logs/s2)
+        # TODO: Assign path to models (SoVITS: v2vt/logs/2-train-s2)
         self.sovits_path = ''
         self.gpt_path = ''
 

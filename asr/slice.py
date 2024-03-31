@@ -1,13 +1,12 @@
 import os
-import argparse
 
 from pydub import AudioSegment
 from pydub.silence import split_on_silence
 
 
 class Slicer:
-    
-    def __init__(self, input_file, output_folder, min_length, min_silence, silence_thresh, silence_keep):
+
+    def __init__(self, input_file, output_folder, min_length=5000, min_silence=500, silence_thresh=-16, silence_keep=250):
         self.input_file = input_file
         self.output_folder = output_folder
         self.min_length = min_length
@@ -58,27 +57,3 @@ class Slicer:
                 return print(f'Failed to export {output_file_name}_{i}.wav: {e}')
 
         return self.output_folder
-
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-i', '--input_file', required=True,
-                        help='Path to WAV file to slice')
-    parser.add_argument('-o', '--output_folder', required=True,
-                        help='Output folder to store sliced audio clips')
-    parser.add_argument('--min_length', type=int, default=5000,
-                        help='Minimum length of sliced audio clips in ms (default = 5000)')
-    parser.add_argument('--min_silence', type=int, default=500,
-                        help='Minimum length of silence to be used for split in ms (default = 500)')
-    parser.add_argument('--silence_thresh', type=float, default=-16,
-                        help='Threshold in dbFS under which audio will be considered silence (default = -16)')
-    parser.add_argument('--silence_keep', type=int, default=250,
-                        help='Length of silence in ms to keep at the beginning/end of a chunk')
-
-    args = parser.parse_args()
-
-    slicer = Slicer(args.input_file, args.output_folder,
-                         args.min_length, args.min_silence, args.silence_thresh, args.silence_keep)
-    output_path = slicer.slice()
-
-    print(f'Audio slicing complete -- files written to {output_path}')
