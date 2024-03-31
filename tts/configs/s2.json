@@ -85,6 +85,6 @@
     "semantic_frame_rate": "25hz",
     "freeze_quantizer": true
   },
-  "s2_ckpt_dir": "TEMP/s2/big2k1",
+  "s2_ckpt_dir": "logs/s2/big2k1",
   "content_module": "cnhubert"
 }

@@ -46,17 +46,17 @@ class TextAudioSpeakerLoader(torch.utils.data.Dataset):
 
     def __init__(self, hparams, val=False):
         exp_dir = hparams.exp_dir
-        self.path2 = "%s/2-name2text.txt" % exp_dir
-        self.path4 = "%s/4-cnhubert" % exp_dir
-        self.path5 = "%s/5-wav32k" % exp_dir
-        assert os.path.exists(self.path2)
-        assert os.path.exists(self.path4)
-        assert os.path.exists(self.path5)
+        self.path_a_text = "%s/../1-preproc/get-text.txt" % exp_dir
+        self.path_b_hubert = "%s/../1-preproc/hubert" % exp_dir
+        self.path_b_wav32k = "%s/../1-preproc/wav32k" % exp_dir
+        assert os.path.exists(self.path_a_text)
+        assert os.path.exists(self.path_b_hubert)
+        assert os.path.exists(self.path_b_wav32k)
         names4 = set([name[:-3]
-                     for name in list(os.listdir(self.path4))])  # 去除.pt后缀
-        names5 = set(os.listdir(self.path5))
+                     for name in list(os.listdir(self.path_b_hubert))])  # 去除.pt后缀
+        names5 = set(os.listdir(self.path_b_wav32k))
         self.phoneme_data = {}
-        with open(self.path2, "r", encoding="utf8") as f:
+        with open(self.path_a_text, "r", encoding="utf8") as f:
             lines = f.read().strip("\n").split("\n")
 
         for line in lines:
@@ -102,7 +102,7 @@ class TextAudioSpeakerLoader(torch.utils.data.Dataset):
                 skipped_phone += 1
                 continue
 
-            size = os.path.getsize("%s/%s" % (self.path5, audiopath))
+            size = os.path.getsize("%s/%s" % (self.path_b_wav32k, audiopath))
             duration = size / self.sampling_rate / 2
 
             if duration == 0:
@@ -127,10 +127,11 @@ class TextAudioSpeakerLoader(torch.utils.data.Dataset):
         audiopath, phoneme_ids = audiopath_sid_text
         text = torch.FloatTensor(phoneme_ids)
         try:
-            spec, wav = self.get_audio("%s/%s" % (self.path5, audiopath))
+            spec, wav = self.get_audio(
+                "%s/%s" % (self.path_b_wav32k, audiopath))
             with torch.no_grad():
                 ssl = torch.load("%s/%s.pt" %
-                                 (self.path4, audiopath), map_location="cpu")
+                                 (self.path_b_hubert, audiopath), map_location="cpu")
                 if (ssl.shape[-1] != spec.shape[-1]):
                     typee = ssl.dtype
                     ssl = F.pad(ssl.float(), (0, 1),

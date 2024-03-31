@@ -92,7 +92,8 @@ Note: it is recommended to install within an environment to prevent compatibilit
 #### If you get model errors:
   
   Download [vocal removal model](https://huggingface.co/huangjackson/Kim_Vocal_2) and place in `v2vt/vr/models`.\
-  Download [translation models](https://huggingface.co/huangjackson/ct2-opus-mt) and place in `v2vt/nmt/models`.
+  Download [translation models](https://huggingface.co/huangjackson/ct2-opus-mt) and place in `v2vt/nmt/models`.\
+  Download [TTS models](https://huggingface.co/lj1995/GPT-SoVITS) and place in `v2vt/tts/models`.
 
 
 <!-- USAGE -->
@@ -120,6 +121,7 @@ Instructions included in Colab and live demo. For local installations:
 - [x] Translation
 - [ ] Voice cloning/TTS
 - [ ] Lip sync
+- [ ] Multiple GPUs support
 
 See the [open issues](https://github.com/huangjackson/v2vt/issues) for a full list of proposed features (and known issues).
 

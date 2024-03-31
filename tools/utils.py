@@ -78,7 +78,7 @@ def check_models_and_install():
     script_dir = os.path.dirname(os.path.realpath(__file__))
     nmt_models_path = os.path.join(script_dir, '../nmt/models')
     vr_models_path = os.path.join(script_dir, '../vr/models')
-    tts_models_path = os.path.join(script_dir, '../tts/models/pretrained')
+    tts_models_path = os.path.join(script_dir, '../tts/models/')
 
     nmt_required_files = ['model.bin', 'config.json',
                           'shared_vocabulary.json', 'source.spm', 'target.spm']
