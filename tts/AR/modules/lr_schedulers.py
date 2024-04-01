@@ -1,0 +1,105 @@
+# MIT License
+#
+# Copyright (c) 2024 RVC-Boss
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+# modified from https://github.com/yangdongchao/SoundStorm/blob/master/soundstorm/s1/AR/modules/lr_schedulers.py
+# reference: https://github.com/lifeiteng/vall-e
+import math
+
+import torch
+from matplotlib import pyplot as plt
+from torch import nn
+from torch.optim import Adam
+
+
+class WarmupCosineLRSchedule(torch.optim.lr_scheduler._LRScheduler):
+    """
+    Implements Warmup learning rate schedule until 'warmup_steps', going from 'init_lr' to 'peak_lr' for multiple optimizers.
+    """
+
+    def __init__(
+        self,
+        optimizer,
+        init_lr,
+        peak_lr,
+        end_lr,
+        warmup_steps=10000,
+        total_steps=400000,
+        current_step=0,
+    ):
+        self.init_lr = init_lr
+        self.peak_lr = peak_lr
+        self.end_lr = end_lr
+        self.optimizer = optimizer
+        self._warmup_rate = (peak_lr - init_lr) / warmup_steps
+        self._decay_rate = (end_lr - peak_lr) / (total_steps - warmup_steps)
+        self._current_step = current_step
+        self.lr = init_lr
+        self.warmup_steps = warmup_steps
+        self.total_steps = total_steps
+        self._last_lr = [self.lr]
+
+    def set_lr(self, lr):
+        self._last_lr = [g["lr"] for g in self.optimizer.param_groups]
+        for g in self.optimizer.param_groups:
+            # g['lr'] = lr
+            g["lr"] = self.end_lr  # 锁定用线性
+
+    def step(self):
+        if self._current_step < self.warmup_steps:
+            lr = self.init_lr + self._warmup_rate * self._current_step
+
+        elif self._current_step > self.total_steps:
+            lr = self.end_lr
+
+        else:
+            decay_ratio = (self._current_step - self.warmup_steps) / (
+                self.total_steps - self.warmup_steps
+            )
+            if decay_ratio < 0.0 or decay_ratio > 1.0:
+                raise RuntimeError(
+                    "Decay ratio must be in [0.0, 1.0]. Fix LR scheduler settings."
+                )
+            coeff = 0.5 * (1.0 + math.cos(math.pi * decay_ratio))
+            lr = self.end_lr + coeff * (self.peak_lr - self.end_lr)
+
+        self.lr = lr = self.end_lr = 0.002  # 锁定用线性###不听话，直接锁定！
+        self.set_lr(lr)
+        self.lr = lr
+        self._current_step += 1
+        return self.lr
+
+
+if __name__ == "__main__":
+    m = nn.Linear(10, 10)
+    opt = Adam(m.parameters(), lr=1e-4)
+    s = WarmupCosineLRSchedule(
+        opt, 1e-6, 2e-4, 1e-6, warmup_steps=2000, total_steps=20000, current_step=0
+    )
+    lrs = []
+    for i in range(25000):
+        s.step()
+        lrs.append(s.lr)
+        print(s.lr)
+
+    plt.plot(lrs)
+    plt.plot(range(0, 25000), lrs)
+    plt.show()

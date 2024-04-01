@@ -12,6 +12,13 @@ class ModelData:
         self.tmp_dir = os.path.join(self.project_dir, 'TEMP')
         self.out_dir = os.path.join(self.project_dir, 'logs')
 
+        self.preproc_dir = os.path.join(self.out_dir, '1-preproc')
+        self.s2_dir = os.path.join(self.out_dir, '2-train-s2')
+        self.s2_ckpt_dir = os.path.join(self.s2_dir, 'ckpt')
+
+        self.s1_dir = os.path.join(self.out_dir, '3-train-s1')
+        self.s1_ckpt_dir = os.path.join(self.s1_dir, 'ckpt')
+
         # TODO: Assign path to models (SoVITS: v2vt/logs/2-train-s2)
         self.sovits_path = ''
         self.gpt_path = ''
@@ -21,6 +28,7 @@ class ModelData:
         self.gpt_weights_path = os.path.join(self.out_dir, 'GPT_weights')
 
         self.s2_config_path = os.path.join(self.configs_dir, 's2.json')
+        self.s1_config_path = os.path.join(self.configs_dir, 's1longer.yaml')
 
         try:
             self.hubert_path = self.get_hubert_model_path()

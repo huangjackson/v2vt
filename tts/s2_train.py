@@ -76,15 +76,13 @@ class S2Train:
                  if_save_latest, if_save_every_weights, save_every_epoch):
         self.model = ModelData()
 
-        self.tmp = self.model.tmp_dir
-        self.s2_dir = os.path.join(self.model.out_dir, '2-train-s2')
-
         self.global_step = 0
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
         try:
-            os.makedirs(self.tmp, exist_ok=True)
-            os.makedirs(self.s2_dir, exist_ok=True)
+            os.makedirs(self.model.tmp_dir, exist_ok=True)
+            os.makedirs(self.model.s2_dir, exist_ok=True)
+            os.makedirs(self.model.s2_ckpt_dir, exist_ok=True)
             os.makedirs(self.model.sovits_weights_path, exist_ok=True)
 
             with open(self.model.s2_config_path, 'r') as f:
@@ -100,10 +98,12 @@ class S2Train:
             data['train']['if_save_latest'] = if_save_latest
             data['train']['if_save_every_weights'] = if_save_every_weights
             data['train']['save_every_epoch'] = save_every_epoch
-            data['data']['exp_dir'] = data['s2_ckpt_dir'] = self.s2_dir
+            data['data']['exp_dir'] = self.model.s2_dir
+            data['s2_ckpt_dir'] = self.model.s2_ckpt_dir
             data['save_weight_dir'] = self.model.sovits_weights_path
 
-            self.tmp_config_path = os.path.join(self.tmp, 'tmp_s2.json')
+            self.tmp_config_path = os.path.join(
+                self.model.tmp_dir, 'tmp_s2.json')
             with open(self.tmp_config_path, 'w') as f:
                 f.write(json.dumps(data))
         except Exception as e:
@@ -122,9 +122,9 @@ class S2Train:
 
         logger = get_logger(self.hps.data.exp_dir)
         logger.info(self.hps)
-        writer = SummaryWriter(log_dir=self.hps.s2_ckpt_dir)
+        writer = SummaryWriter(log_dir=self.hps.data.exp_dir)
         writer_eval = SummaryWriter(
-            log_dir=os.path.join(self.hps.s2_ckpt_dir, 'eval'))
+            log_dir=os.path.join(self.hps.data.exp_dir, 'eval'))
 
         dist.init_process_group(
             backend='gloo' if os.name == 'nt' or not self.device == 'cuda' else 'nccl',
@@ -232,7 +232,7 @@ class S2Train:
         try:
             _, _, _, epoch_str = load_checkpoint(
                 latest_checkpoint_path(
-                    self.hps.data.exp_dir, 'G_*.pth'),
+                    self.hps.s2_ckpt_dir, 'G_*.pth'),
                 net_g,
                 optim_g
             )
@@ -240,7 +240,7 @@ class S2Train:
 
             _, _, _, epoch_str = load_checkpoint(
                 latest_checkpoint_path(
-                    self.hps.data.exp_dir, 'D_*.pth'),
+                    self.hps.s2_ckpt_dir, 'D_*.pth'),
                 net_d,
                 optim_d
             )
@@ -472,7 +472,7 @@ class S2Train:
                     self.hps.train.learning_rate,
                     epoch,
                     os.path.join(
-                        self.hps.data.exp_dir, f'G_{self.global_step}.pth'
+                        self.hps.s2_ckpt_dir, f'G_{self.global_step}.pth'
                     ),
                 )
                 save_checkpoint(
@@ -481,7 +481,7 @@ class S2Train:
                     self.hps.train.learning_rate,
                     epoch,
                     os.path.join(
-                        self.hps.data.exp_dir, f'D_{self.global_step}.pth'
+                        self.hps.s2_ckpt_dir, f'D_{self.global_step}.pth'
                     ),
                 )
             else:
@@ -491,7 +491,7 @@ class S2Train:
                     self.hps.train.learning_rate,
                     epoch,
                     os.path.join(
-                        self.hps.data.exp_dir, f'G_latest.pth'
+                        self.hps.s2_ckpt_dir, f'G_latest.pth'
                     ),
                 )
                 save_checkpoint(
@@ -500,7 +500,7 @@ class S2Train:
                     self.hps.train.learning_rate,
                     epoch,
                     os.path.join(
-                        self.hps.data.exp_dir, f'D_latest.pth'
+                        self.hps.s2_ckpt_dir, f'D_latest.pth'
                     ),
                 )
             if self.hps.train.if_save_every_weights:  # rank = 0, 1 gpu

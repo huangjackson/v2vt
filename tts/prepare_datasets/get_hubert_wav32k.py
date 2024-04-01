@@ -31,7 +31,7 @@ from transformers import (
 )
 from scipy.io import wavfile
 
-# Absolute import unlike others, TODO: make every import absolute?
+# TODO: Absolute import unlike others, make every import absolute?
 from tools.ffmpeg import load_audio
 
 

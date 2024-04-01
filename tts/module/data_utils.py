@@ -31,7 +31,7 @@ from .mel_processing import spectrogram_torch
 from ..text import cleaned_text_to_sequence
 import torch.nn.functional as F
 
-# Absolute import unlike others, TODO: make every import absolute?
+# TODO: Absolute import unlike others, make every import absolute?
 from tools.ffmpeg import load_audio
 
 # ZeroDivisionError fixed by Tybost (https://github.com/RVC-Boss/GPT-SoVITS/issues/79)
@@ -46,7 +46,7 @@ class TextAudioSpeakerLoader(torch.utils.data.Dataset):
 
     def __init__(self, hparams, val=False):
         exp_dir = hparams.exp_dir
-        self.path_a_text = os.path.join(exp_dir, '../1-preproc/get-text.txt')
+        self.path_a_text = os.path.join(exp_dir, '../1-preproc/phoneme.txt')
         self.path_b_hubert = os.path.join(exp_dir, '../1-preproc/hubert')
         self.path_b_wav32k = os.path.join(exp_dir, '../1-preproc/wav32k')
         assert os.path.exists(self.path_a_text)
