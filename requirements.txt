@@ -28,3 +28,4 @@ pytorch-lightning==2.2.1
 PyYAML==6.0.1
 gruut==2.3.4
 typeguard==4.2.1
+LangSegment==0.2.8

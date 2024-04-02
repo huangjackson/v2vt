@@ -19,10 +19,6 @@ class ModelData:
         self.s1_dir = os.path.join(self.out_dir, '3-train-s1')
         self.s1_ckpt_dir = os.path.join(self.s1_dir, 'ckpt')
 
-        # TODO: Assign path to models (SoVITS: v2vt/logs/2-train-s2)
-        self.sovits_path = ''
-        self.gpt_path = ''
-
         self.sovits_weights_path = os.path.join(
             self.out_dir, 'SoVITS_weights')
         self.gpt_weights_path = os.path.join(self.out_dir, 'GPT_weights')
@@ -34,11 +30,11 @@ class ModelData:
             self.hubert_path = self.get_hubert_model_path()
             self.roberta_path = self.get_roberta_model_path()
 
-            # Get SoVITS paths
+            # Get pretrained SoVITS paths
             self.pretrained_s2G_path = self.get_s2G_model_path()
             self.pretrained_s2D_path = self.get_s2D_model_path()
 
-            # Get GPT path
+            # Get pretrained GPT path
             self.pretrained_s1_path = self.get_s1_model_path()
         except Exception as e:
             raise Exception(f'Error while getting pretrained models: {e}')
