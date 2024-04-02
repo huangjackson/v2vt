@@ -119,7 +119,7 @@ Instructions included in Colab and live demo. For local installations:
 - [x] Vocal isolation
 - [x] Transcription
 - [x] Translation
-- [ ] Voice cloning/TTS
+- [x] Voice cloning/TTS
 - [ ] Lip sync
 - [ ] Multiple GPUs support
 
@@ -134,9 +134,9 @@ Any contributions are **greatly appreciated**.
 If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
 
 1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+2. Create your Feature Branch (`git checkout -b feat/AmazingFeature`)
 3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
+4. Push to the Branch (`git push origin feat/AmazingFeature`)
 5. Open a Pull Request
 
 
@@ -161,14 +161,13 @@ Project Link: [https://github.com/huangjackson/v2vt](https://github.com/huangjac
 Special thanks to the following people and projects:
 
 * [GPT-SoVITS](https://github.com/RVC-Boss/GPT-SoVITS)
+* [CTranslate2](https://github.com/OpenNMT/CTranslate2)
 * [faster-whisper](https://github.com/SYSTRAN/faster-whisper)
+* [video-retalking](https://github.com/OpenTalker/video-retalking)
 * [ultimatevocalremovergui](https://github.com/Anjok07/ultimatevocalremovergui)
 * [KUIELab & Woosung Choi](https://github.com/kuielab) - For the original MDX-Net music demixing model
-* [KimberleyJensen](https://github.com/KimberleyJensen) - For the Kim Vocal 2 MDX-Net model (used in uvr/models)
-* [video-retalking](https://github.com/OpenTalker/video-retalking)
-* [FFmpeg](https://github.com/FFmpeg/FFmpeg)
-* [CTranslate2](https://github.com/OpenNMT/CTranslate2)
-* [Opus-MT](https://github.com/Helsinki-NLP/Opus-MT)
+* [KimberleyJensen](https://github.com/KimberleyJensen) - For the Kim Vocal 2 MDX-Net model
+* [Opus-MT](https://github.com/Helsinki-NLP/Opus-MT) - For translation models
 * [Best-README-Template](https://github.com/othneildrew/Best-README-Template)
 
 
