@@ -1,5 +1,3 @@
-# Includes modified code from https://github.com/RVC-Boss/GPT-SoVITS
-
 import os
 import logging
 from collections import OrderedDict

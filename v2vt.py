@@ -7,10 +7,10 @@ from tools.ffmpeg import (
     extract_audio
 )
 
-from vr.uvr import UltimateVocalRemover
-from asr.slice import Slicer
-from asr.transcribe import Transcriber
-from nmt.translate import Translator
+from tools.vr.uvr import UltimateVocalRemover
+from tools.asr.slice import Slicer
+from tools.asr.transcribe import Transcriber
+from tools.nmt.translate import Translator
 
 from tts.config import ModelData
 from tts.prepare_datasets.get_text import GetText

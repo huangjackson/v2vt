@@ -1,8 +1,3 @@
-# Includes modified code from https://github.com/RVC-Boss/GPT-SoVITS
-
-from .AR.models.t2s_lightning_module import Text2SemanticLightningModule
-from .text.cleaner import clean_text
-from .text import cleaned_text_to_sequence
 import os
 import re
 from time import time as ttime
@@ -18,6 +13,9 @@ from .config import ModelData
 from .feature_extractor import cnhubert
 from .module.models import SynthesizerTrn
 from .module.mel_processing import spectrogram_torch
+from .AR.models.t2s_lightning_module import Text2SemanticLightningModule
+from .text.cleaner import clean_text
+from .text import cleaned_text_to_sequence
 
 # TODO: Absolute import unlike others, make every import absolute?
 from tools.ffmpeg import load_audio

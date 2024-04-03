@@ -91,8 +91,8 @@ Note: it is recommended to install within an environment to prevent compatibilit
 
 #### If you get model errors:
   
-  Download [vocal removal model](https://huggingface.co/huangjackson/Kim_Vocal_2) and place in `v2vt/vr/models`.\
-  Download [translation models](https://huggingface.co/huangjackson/ct2-opus-mt) and place in `v2vt/nmt/models`.\
+  Download [vocal removal model](https://huggingface.co/huangjackson/Kim_Vocal_2) and place in `v2vt/tools/vr/models`.\
+  Download [translation models](https://huggingface.co/huangjackson/ct2-opus-mt) and place in `v2vt/tools/nmt/models`.\
   Download [TTS models](https://huggingface.co/lj1995/GPT-SoVITS) and place in `v2vt/tts/models`.
 
 

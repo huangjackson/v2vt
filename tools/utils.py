@@ -76,8 +76,8 @@ def download_model_from_hf(repo_id, output_dir):
 
 def check_models_and_install():
     script_dir = os.path.dirname(os.path.realpath(__file__))
-    nmt_models_path = os.path.join(script_dir, '../nmt/models')
-    vr_models_path = os.path.join(script_dir, '../vr/models')
+    nmt_models_path = os.path.join(script_dir, '../tools/nmt/models')
+    vr_models_path = os.path.join(script_dir, '../tools/vr/models')
     tts_models_path = os.path.join(script_dir, '../tts/models/')
 
     nmt_required_files = ['model.bin', 'config.json',

@@ -1,5 +1,3 @@
-# Includes modified code from https://github.com/Anjok07/ultimatevocalremovergui
-
 import os
 
 from .separate import (
