@@ -9,9 +9,13 @@ TEMP/
 *.bin
 *.spm
 *.onnx
+*.pt
 *.pth
 *.ckpt
+*.mat
+*.dat
 **/models/**/*.json
+**/checkpoints/**/*.txt
 
 # Jupyter Notebook
 .ipynb_checkpoints

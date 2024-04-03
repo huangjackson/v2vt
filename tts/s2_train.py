@@ -33,7 +33,7 @@ from .utils import (
     summarize,
     savee,
 )
-from .config import ModelData
+from .config import TTSModel    
 
 # Prevent module not found error when loading pretrained models
 import sys
@@ -52,7 +52,7 @@ class S2Train:
 
     def __init__(self, batch_size, total_epoch, text_low_lr_rate,
                  if_save_latest, if_save_every_weights, save_every_epoch):
-        self.model = ModelData()
+        self.model = TTSModel()
 
         self.global_step = 0
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'

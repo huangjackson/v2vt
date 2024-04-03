@@ -93,7 +93,8 @@ Note: it is recommended to install within an environment to prevent compatibilit
   
   Download [vocal removal model](https://huggingface.co/huangjackson/Kim_Vocal_2) and place in `v2vt/tools/vr/models`.\
   Download [translation models](https://huggingface.co/huangjackson/ct2-opus-mt) and place in `v2vt/tools/nmt/models`.\
-  Download [TTS models](https://huggingface.co/lj1995/GPT-SoVITS) and place in `v2vt/tts/models`.
+  Download [TTS models](https://huggingface.co/lj1995/GPT-SoVITS) and place in `v2vt/tts/models`.\
+  Download [lip sync models](https://huggingface.co/huangjackson/video-retalking-pretrained) and place in `v2vt/lipsync/checkpoints`.
 
 
 <!-- USAGE -->

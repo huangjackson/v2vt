@@ -53,7 +53,7 @@ def download_model_from_hf(repo_id, output_dir):
 
     model_folder = snapshot_download(repo_id=repo_id)
 
-    exclude_files = ['.gitattributes', 'README.md']
+    exclude_files = ['.gitattributes', 'README.md', 'LICENSE']
 
     for dirpath, dirnames, filenames in os.walk(model_folder):
         for filename in filenames:
@@ -76,9 +76,10 @@ def download_model_from_hf(repo_id, output_dir):
 
 def check_models_and_install():
     script_dir = os.path.dirname(os.path.realpath(__file__))
-    nmt_models_path = os.path.join(script_dir, '../tools/nmt/models')
-    vr_models_path = os.path.join(script_dir, '../tools/vr/models')
+    nmt_models_path = os.path.join(script_dir, '../tools/nmt/models/')
+    vr_models_path = os.path.join(script_dir, '../tools/vr/models/')
     tts_models_path = os.path.join(script_dir, '../tts/models/')
+    lipsync_models_path = os.path.join(script_dir, '../lipsync/checkpoints/')
 
     nmt_required_files = ['model.bin', 'config.json',
                           'shared_vocabulary.json', 'source.spm', 'target.spm']
@@ -91,6 +92,26 @@ def check_models_and_install():
                           'chinese-roberta-wwm-ext-large/config.json',
                           'chinese-roberta-wwm-ext-large/tokenizer.json',
                           'chinese-roberta-wwm-ext-large/pytorch_model.bin']
+    lipsync_required_files = ['30_net_gen.pth',
+                              'DNet.pt',
+                              'ENet.pth',
+                              'expression.mat',
+                              'face3d_pretrain_epoch_20.pth',
+                              'GFPGANv1.3.pth',
+                              'GPEN-BFR-512.pth',
+                              'LNet.pth',
+                              'ParseNet-latest.pth',
+                              'RetinaFace-R50.pth',
+                              'shape_predictor_68_face_landmarks.dat',
+                              'BFM/01_MorphableModel.mat',
+                              'BFM/BFM_exp_idx.mat',
+                              'BFM/BFM_front_idx.mat',
+                              'BFM/BFM_model_front.mat',
+                              'BFM/Exp_Pca.bin',
+                              'BFM/facemodel_info.mat',
+                              'BFM/select_vertex_id.mat',
+                              'BFM/similarity_Lm3D_all.mat',
+                              'BFM/std_exp.txt']
 
     # Check for translation models
     for model_folder in os.listdir(nmt_models_path):
@@ -110,3 +131,9 @@ def check_models_and_install():
     if not all(os.path.exists(os.path.join(tts_models_path, file)) for file in tts_required_files):
         print('TTS pretrained models not found. Downloading from HuggingFace...')
         download_model_from_hf('lj1995/GPT-SoVITS', tts_models_path)
+
+    # Check for lip sync models
+    if not all(os.path.exists(os.path.join(lipsync_models_path, file)) for file in lipsync_required_files):
+        print('Lip sync pretrained models not found. Downloading from HuggingFace...')
+        download_model_from_hf(
+            'huangjackson/video-retalking-pretrained', lipsync_models_path)

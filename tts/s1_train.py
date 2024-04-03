@@ -12,7 +12,7 @@ from pytorch_lightning.callbacks import ModelCheckpoint
 from pytorch_lightning.loggers import TensorBoardLogger
 from pytorch_lightning.strategies import DDPStrategy
 
-from .config import ModelData
+from .config import TTSModel
 from .AR.utils.io import load_yaml_config
 from .AR.utils import get_newest_ckpt
 from .AR.models.t2s_lightning_module import Text2SemanticLightningModule
@@ -74,7 +74,7 @@ class S1Train:
 
     def __init__(self, batch_size, total_epoch, if_dpo, if_save_latest,
                  if_save_every_weights, save_every_epoch):
-        self.model = ModelData()
+        self.model = TTSModel()
 
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
 

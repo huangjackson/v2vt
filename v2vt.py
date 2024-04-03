@@ -12,7 +12,7 @@ from tools.asr.slice import Slicer
 from tools.asr.transcribe import Transcriber
 from tools.nmt.translate import Translator
 
-from tts.config import ModelData
+from tts.config import TTSModel
 from tts.prepare_datasets.get_text import GetText
 from tts.prepare_datasets.get_hubert_wav32k import GetHubertWav32k
 from tts.prepare_datasets.get_semantic import GetSemantic
@@ -33,7 +33,7 @@ if __name__ == '__main__':
     check_dependencies()
     check_models_and_install()
 
-    # model = ModelData()
+    # model = TTSModel()
 
     # 1: Preprocessing
     # step1a = GetText(transcribed_file='logs/transcribed.list',

@@ -1,7 +1,7 @@
 import os
 
 
-class ModelData:
+class TTSModel:
 
     def __init__(self):
         self.script_dir = os.path.dirname(os.path.realpath(__file__))

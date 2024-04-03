@@ -9,7 +9,7 @@ import LangSegment
 from transformers import AutoTokenizer, AutoModelForMaskedLM
 from scipy.io import wavfile
 
-from .config import ModelData
+from .config import TTSModel
 from .feature_extractor import cnhubert
 from .module.models import SynthesizerTrn
 from .module.mel_processing import spectrogram_torch
@@ -105,7 +105,7 @@ class TTSInference:
         self.ref_free = ref_free if (
             ref_text is not None and len(ref_text) != 0) else True
 
-        self.model = ModelData()
+        self.model = TTSModel()
 
         self.sovits_path = None
         self.gpt_path = None
