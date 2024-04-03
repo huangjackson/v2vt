@@ -13,9 +13,10 @@
 # limitations under the License.
 
 import torch
-from models.DNet import DNet
-from models.LNet import LNet
-from models.ENet import ENet
+
+from .DNet import DNet
+from .LNet import LNet
+from .ENet import ENet
 
 
 def _load(checkpoint_path):

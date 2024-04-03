@@ -17,10 +17,11 @@ import cv2
 import torch
 import torchvision.transforms.functional as TF
 
-from models import load_network, load_DNet
 from tqdm import tqdm
 from PIL import Image
 from scipy.spatial import ConvexHull
+
+from ..models import load_network, load_DNet
 from ..third_part import face_detection
 from ..third_part.face3d.models import networks
 

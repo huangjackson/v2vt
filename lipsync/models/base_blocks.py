@@ -18,9 +18,9 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.nn.modules.batchnorm import BatchNorm2d
 from torch.nn.utils.spectral_norm import spectral_norm as SpectralNorm
-
-from models.ffc import FFC
 from basicsr.archs.arch_util import default_init_weights
+
+from .ffc import FFC
 
 
 class Conv2d(nn.Module):

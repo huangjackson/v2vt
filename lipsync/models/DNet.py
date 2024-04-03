@@ -14,18 +14,15 @@
 
 # TODO
 import functools
-import numpy as np
 
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 
-from utils import flow_util
-from models.base_blocks import LayerNorm2d, ADAINHourglass, FineEncoder, FineDecoder
+from .base_blocks import LayerNorm2d, ADAINHourglass, FineEncoder, FineDecoder
+from ..utils import flow_util
+
 
 # DNet
-
-
 class DNet(nn.Module):
     def __init__(self):
         super(DNet, self).__init__()
