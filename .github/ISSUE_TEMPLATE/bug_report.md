@@ -23,16 +23,12 @@ A clear and concise description of what you expected to happen.
 **Screenshots**
 If applicable, add screenshots to help explain your problem.
 
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
-
-**Smartphone (please complete the following information):**
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
- - Version [e.g. 22]
+**Environment (please complete the following information):**
+ - OS: [e.g. Windows 11]
+ - CPU/GPU: [e.g. NVIDIA GeForce RTX 3070 Ti]
+ - Python: [e.g. 3.9.19]
+ - Pytorch: [e.g. 2.1.1]
+ - CUDA: [e.g. 11.8]
 
 **Additional context**
 Add any other context about the problem here.
