@@ -119,12 +119,12 @@ Instructions included in Colab and live demo. For local installations:
 - [x] Transcription
 - [x] Translation
 - [x] Voice cloning/TTS
-  - [ ] *Match speed of original video
+  - [ ] *Match speed of original video ([#3](https://github.com/huangjackson/v2vt/issues/3))
   - [ ] Multiple GPUs support
   - [ ] Support training & using multiple models
 - [x] Lip sync
-  - [ ] *Support lip sync where face isn't always present in video
-  - [ ] *Better face detection
+  - [ ] *Support lip sync where face isn't always present in video ([#1](https://github.com/huangjackson/v2vt/issues/1))
+  - [ ] *Better face detection ([#2](https://github.com/huangjackson/v2vt/issues/2))
   - [ ] Improve inference speed
 - [ ] Additional languages (currently only en & zh)
 
