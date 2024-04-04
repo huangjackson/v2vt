@@ -16,6 +16,8 @@ TEMP/
 *.dat
 **/models/**/*.json
 **/checkpoints/**/*.txt
+*.mp4
+*.wav
 
 # Environment
 env/

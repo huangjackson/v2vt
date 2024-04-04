@@ -2,8 +2,8 @@
 name: Bug report
 about: Create a report to help us improve
 title: ''
-labels: ''
-assignees: ''
+labels: 'bug'
+assignees: 'huangjackson'
 
 ---
 
@@ -20,7 +20,7 @@ Steps to reproduce the behavior:
 **Expected behavior**
 A clear and concise description of what you expected to happen.
 
-**Screenshots**
+**Screenshots/Logs**
 If applicable, add screenshots to help explain your problem.
 
 **Environment (please complete the following information):**
