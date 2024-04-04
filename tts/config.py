@@ -12,6 +12,7 @@ class TTSModel:
         self.tmp_dir = os.path.join(self.project_dir, 'TEMP')
         self.out_dir = os.path.join(self.project_dir, 'logs')
 
+        # TODO: let user set config
         self.preproc_dir = os.path.join(self.out_dir, '1-preproc')
         self.s2_dir = os.path.join(self.out_dir, '2-train-s2')
         self.s2_ckpt_dir = os.path.join(self.s2_dir, 'ckpt')
@@ -27,66 +28,43 @@ class TTSModel:
         self.s1_config_path = os.path.join(self.configs_dir, 's1longer.yaml')
 
         try:
-            self.hubert_path = self.get_hubert_model_path()
-            self.roberta_path = self.get_roberta_model_path()
+            self.hubert_path = self.get_model_folder(
+                model_name='chinese-hubert-base',
+                required_files=['config.json',
+                                'preprocessor_config.json',
+                                'pytorch_model.bin']
+            )
+            self.roberta_path = self.get_model_folder(
+                model_name='chinese-roberta-wwm-ext-large',
+                required_files=['config.json',
+                                'tokenizer.json',
+                                'pytorch_model.bin']
+            )
 
             # Get pretrained SoVITS paths
-            self.pretrained_s2G_path = self.get_s2G_model_path()
-            self.pretrained_s2D_path = self.get_s2D_model_path()
+            self.pretrained_s2G_path = self.get_model_path('s2G488k.pth')
+            self.pretrained_s2D_path = self.get_model_path('s2D488k.pth')
 
             # Get pretrained GPT path
-            self.pretrained_s1_path = self.get_s1_model_path()
+            self.pretrained_s1_path = self.get_model_path(
+                's1bert25hz-2kh-longer-epoch=68e-step=50232.ckpt')
         except Exception as e:
             raise Exception(f'Error while getting pretrained models: {e}')
 
-    def get_hubert_model_path(self):
-        model_path = os.path.join(
-            self.models_dir, 'chinese-hubert-base')
-        required_files = ['config.json',
-                          'preprocessor_config.json', 'pytorch_model.bin']
+    def get_model_path(self, model_name):
+        model_path = os.path.join(self.models_dir, model_name)
+
+        if not os.path.exists(model_path):
+            raise Exception(
+                f'{model_name} model file is missing. Please check the models directory.')
+
+        return model_path
+
+    def get_model_folder(self, model_name, required_files):
+        model_path = os.path.join(self.models_dir, model_name)
 
         if not all(os.path.exists(os.path.join(model_path, file)) for file in required_files):
             raise Exception(
-                'One or more model files are missing. Please check the models directory.')
-
-        return model_path
-
-    def get_roberta_model_path(self):
-        model_path = os.path.join(
-            self.models_dir, 'chinese-roberta-wwm-ext-large')
-        required_files = ['config.json',
-                          'tokenizer.json', 'pytorch_model.bin']
-
-        if not all(os.path.exists(os.path.join(model_path, file)) for file in required_files):
-            raise Exception(
-                'One or more model files are missing. Please check the models directory.')
-
-        return model_path
-
-    def get_s2G_model_path(self):
-        model_path = os.path.join(self.models_dir, 's2G488k.pth')
-
-        if not os.path.exists(model_path):
-            raise Exception(
-                'One or more model files are missing. Please check the models directory.')
-
-        return model_path
-
-    def get_s2D_model_path(self):
-        model_path = os.path.join(self.models_dir, 's2D488k.pth')
-
-        if not os.path.exists(model_path):
-            raise Exception(
-                'One or more model files are missing. Please check the models directory.')
-
-        return model_path
-
-    def get_s1_model_path(self):
-        model_path = os.path.join(
-            self.models_dir, 's1bert25hz-2kh-longer-epoch=68e-step=50232.ckpt')
-
-        if not os.path.exists(model_path):
-            raise Exception(
-                'One or more model files are missing. Please check the models directory.')
+                f'One or more {model_name} model files are missing. Please check the models directory.')
 
         return model_path

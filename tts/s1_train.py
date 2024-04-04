@@ -1,3 +1,5 @@
+# Modified from https://github.com/RVC-Boss/GPT-SoVITS/blob/main/GPT_SoVITS/s1_train.py
+
 import os
 import logging
 from collections import OrderedDict

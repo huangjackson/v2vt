@@ -1,3 +1,5 @@
+# Modified from https://github.com/RVC-Boss/GPT-SoVITS/blob/main/GPT_SoVITS/inference_webui.py
+
 import os
 import re
 from time import time as ttime

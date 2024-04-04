@@ -17,6 +17,11 @@ TEMP/
 **/models/**/*.json
 **/checkpoints/**/*.txt
 
+# Environment
+env/
+venv/
+.conda/
+
 # Jupyter Notebook
 .ipynb_checkpoints
 

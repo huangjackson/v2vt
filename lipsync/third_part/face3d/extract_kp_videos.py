@@ -10,7 +10,7 @@ class KeypointExtractor():
     def __init__(self):
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
         self.detector = face_alignment.FaceAlignment(
-            face_alignment.LandmarksType._2D, device=device)
+            face_alignment.LandmarksType.TWO_D, device=device)
 
     def extract_keypoint(self, images, name=None, info=True):
         if isinstance(images, list):

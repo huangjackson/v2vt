@@ -53,7 +53,8 @@ demo.mp4
 Currently supports English and Chinese
 
 * **Vocal isolation**: Isolation of vocals from source video using deep neural networks
-* **Transcription/translation**: Transcription and translation from source language using whisper
+* **Transcription**: Transcription of source video via whisper
+* **Translation**: Translation from source video via CTranslate2 and OPUS-MT
 * **Few-shot voice cloning**: Realistic voice cloning and TTS with as little as 5 seconds of audio from source video
 * **Audio-based lip sync**: Alter faces in source video to match translated audio
 
@@ -65,36 +66,33 @@ Currently only tested in a Windows 11 environment with Python 3.9, PyTorch 2.1.1
 
 ### Prerequisites
 
-Note: it is recommended to install within an environment to prevent compatibility issues (via Anaconda: `conda create -n v2vt python=3.9` and `conda activate v2vt`)
-
-* ffmpeg
-  ```sh
-  conda install ffmpeg
-  ```
-* pytorch & CUDA
-  ```sh
-  conda install pytorch==2.1.1 torchvision==0.16.1 torchaudio==2.1.1 pytorch-cuda=11.8 -c pytorch -c nvidia
-  ```
+* Python 3.9
+* [Anaconda](https://docs.anaconda.com/free/miniconda/miniconda-install/) (recommended)
 
 ### Installation
 
-1. Install prerequisites
-2. Clone the repo
-  ```sh
-  git clone https://github.com/huangjackson/v2vt.git
-  cd v2vt
-  ```
-3. Install from requirements.txt
-  ```sh
-  pip install -r requirements.txt
-  ```
-
-#### If you get model errors:
-  
-  Download [vocal removal model](https://huggingface.co/huangjackson/Kim_Vocal_2) and place in `v2vt/tools/vr/models`.\
-  Download [translation models](https://huggingface.co/huangjackson/ct2-opus-mt) and place in `v2vt/tools/nmt/models`.\
-  Download [TTS models](https://huggingface.co/lj1995/GPT-SoVITS) and place in `v2vt/tts/models`.\
-  Download [lip sync models](https://huggingface.co/huangjackson/video-retalking-pretrained) and place in `v2vt/lipsync/checkpoints`.
+1. Clone the repo
+    ```sh
+    git clone https://github.com/huangjackson/v2vt.git
+    cd v2vt
+    ```
+2. Create a conda environment (recommended)
+    ```sh
+    conda create -n v2vt python=3.9
+    conda activate v2vt
+    ```
+3. Install ffmpeg
+    ```sh
+    conda install ffmpeg
+    ```
+4. Install PyTorch and CUDA
+    ```sh
+    conda install pytorch==2.1.1 torchvision==0.16.1 torchaudio==2.1.1 pytorch-cuda=11.8 -c pytorch -c nvidia
+    ```
+5. Install requirements from requirements.txt
+    ```sh
+    pip install -r requirements.txt
+    ```
 
 
 <!-- USAGE -->
@@ -121,8 +119,14 @@ Instructions included in Colab and live demo. For local installations:
 - [x] Transcription
 - [x] Translation
 - [x] Voice cloning/TTS
-- [ ] Lip sync
-- [ ] Multiple GPUs support
+  - [ ] *Match speed of original video
+  - [ ] Multiple GPUs support
+  - [ ] Support training & using multiple models
+- [x] Lip sync
+  - [ ] *Support lip sync where face isn't always present in video
+  - [ ] *Better face detection
+  - [ ] Improve inference speed
+- [ ] Additional languages (currently only en & zh)
 
 See the [open issues](https://github.com/huangjackson/v2vt/issues) for a full list of proposed features (and known issues).
 
@@ -162,14 +166,13 @@ Project Link: [https://github.com/huangjackson/v2vt](https://github.com/huangjac
 Special thanks to the following people and projects:
 
 * [GPT-SoVITS](https://github.com/RVC-Boss/GPT-SoVITS)
-* [CTranslate2](https://github.com/OpenNMT/CTranslate2)
-* [faster-whisper](https://github.com/SYSTRAN/faster-whisper)
 * [video-retalking](https://github.com/OpenTalker/video-retalking)
+* [CTranslate2](https://github.com/OpenNMT/CTranslate2)
 * [ultimatevocalremovergui](https://github.com/Anjok07/ultimatevocalremovergui)
 * [KUIELab & Woosung Choi](https://github.com/kuielab) - For the original MDX-Net music demixing model
 * [KimberleyJensen](https://github.com/KimberleyJensen) - For the Kim Vocal 2 MDX-Net model
 * [Opus-MT](https://github.com/Helsinki-NLP/Opus-MT) - For translation models
-* [Best-README-Template](https://github.com/othneildrew/Best-README-Template)
+* [faster-whisper](https://github.com/SYSTRAN/faster-whisper)
 
 
 <!-- MARKDOWN LINKS & IMAGES -->

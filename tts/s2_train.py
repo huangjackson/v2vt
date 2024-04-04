@@ -1,3 +1,5 @@
+# Modified from https://github.com/RVC-Boss/GPT-SoVITS/blob/main/GPT_SoVITS/s2_train.py
+
 import os
 import json
 from random import randint

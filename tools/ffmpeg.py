@@ -24,3 +24,14 @@ def load_audio(audio_file_path, sr):
         return np.frombuffer(out.stdout, np.float32).flatten()
     except Exception as e:
         raise Exception(f'Error while loading audio: {e}')
+
+
+def add_audio_to_video(audio, video, outfile):
+    command = ['ffmpeg', '-v', 'quiet', '-y', '-i', audio,
+               '-i', video, '-strict', '-2', '-q:v', '1', outfile]
+
+    try:
+        subprocess.run(command)
+        return outfile
+    except Exception as e:
+        raise Exception(f'Error while writing audio: {e}')

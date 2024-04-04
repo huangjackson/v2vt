@@ -20,6 +20,8 @@ from tts.s2_train import S2Train
 from tts.s1_train import S1Train
 from tts.inference import TTSInference
 
+from lipsync.inference import LipSyncInference
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

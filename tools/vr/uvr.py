@@ -15,6 +15,7 @@ class ModelData:
 
         # Settings specific to Kim_Vocal_2.onnx model
         # TODO: replace with data from model config.json
+        # TODO: let user set config
         self.compensate = 1.009
         self.mdx_dim_f_set = 3072
         self.mdx_dim_t_set = 8
