@@ -1,7 +1,7 @@
 import argparse
 
 from tools.utils import (
-    check_dependencies, check_models_and_install
+    check_dependencies, check_models_and_download
 )
 from tools.ffmpeg import (
     extract_audio
@@ -33,7 +33,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     check_dependencies()
-    check_models_and_install()
+    check_models_and_download(ask=True)
 
     # model = TTSModel()
 

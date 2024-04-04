@@ -35,7 +35,6 @@
   <ol>
     <li><a href="#features">Features</a></li>
     <li><a href="#getting-started">Getting Started</a></li>
-    <li><a href="#usage">Usage</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
@@ -69,7 +68,7 @@ Currently only tested in a Windows 11 environment with Python 3.9, PyTorch 2.1.1
 * Python 3.9
 * [Anaconda](https://docs.anaconda.com/free/miniconda/miniconda-install/) (recommended)
 
-### Installation
+### Manual Installation
 
 1. Clone the repo
     ```sh
@@ -94,22 +93,16 @@ Currently only tested in a Windows 11 environment with Python 3.9, PyTorch 2.1.1
     pip install -r requirements.txt
     ```
 
-
-<!-- USAGE -->
-## Usage
-
-Instructions included in Colab and live demo. For local installations:
-
-### Local Installation - CLI
+### Usage
 
 1. Navigate to directory
-  ```sh
-  cd v2vt
-  ```
+    ```sh
+    cd v2vt
+    ```
 2. Run CLI
-  ```sh
-  python v2vt.py --help
-  ```
+    ```sh
+    python v2vt.py --help
+    ```
 
 
 <!-- ROADMAP -->

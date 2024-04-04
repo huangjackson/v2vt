@@ -7,6 +7,31 @@ import shutil
 from huggingface_hub import snapshot_download
 
 
+def query_yes_no(question, default=None):
+    valid = {'yes': True, 'y': True, 'ye': True, 'no': False, 'n': False}
+
+    if default is None:
+        prompt = ' [y/n] '
+    elif default == 'yes':
+        prompt = ' [Y/n] '
+    elif default == 'no':
+        prompt = ' [y/N] '
+    else:
+        raise ValueError(f'Invalid default answer: "{default}"')
+
+    while True:
+        sys.stdout.write(question + prompt)
+        choice = input().lower()
+
+        if default is not None and choice == '':
+            return valid[default]
+        elif choice in valid:
+            return valid[choice]
+        else:
+            sys.stdout.write('Please respond with "yes" or "no" '
+                             '(or "y" or "n").\n')
+
+
 def is_ffmpeg_installed():
     try:
         subprocess.run(['ffmpeg', '-version'],
@@ -74,7 +99,7 @@ def download_model_from_hf(repo_id, output_dir):
     print(f'Downloaded model to {output_dir}')
 
 
-def check_models_and_install():
+def check_models_and_download(ask=False):
     script_dir = os.path.dirname(os.path.realpath(__file__))
     nmt_models_path = os.path.join(script_dir, '../tools/nmt/models/')
     vr_models_path = os.path.join(script_dir, '../tools/vr/models/')
@@ -113,27 +138,45 @@ def check_models_and_install():
                               'BFM/similarity_Lm3D_all.mat',
                               'BFM/std_exp.txt']
 
+    print('Checking for required models...')
+
     # Check for translation models
     for model_folder in os.listdir(nmt_models_path):
         model_path = os.path.join(nmt_models_path, model_folder)
         if os.path.isdir(model_path):
             if not all(os.path.exists(os.path.join(model_path, file)) for file in nmt_required_files):
-                print('Translation models not found. Downloading from HuggingFace...')
-                download_model_from_hf(
-                    'huangjackson/ct2-opus-mt', nmt_models_path)
+                if ask and query_yes_no(
+                        'Translation models not found. Download from HuggingFace? (Recommended)', default='yes'):
+                    download_model_from_hf(
+                        'huangjackson/ct2-opus-mt', nmt_models_path)
+                else:
+                    print(
+                        'Translation models not found. Downloading from HuggingFace...')
+                    download_model_from_hf(
+                        'huangjackson/ct2-opus-mt', nmt_models_path)
 
     # Check for vocal removal model
     if not all(os.path.exists(os.path.join(vr_models_path, file)) for file in vr_required_files):
-        print('Vocal removal model not found. Downloading from HuggingFace...')
-        download_model_from_hf('huangjackson/Kim_Vocal_2', vr_models_path)
+        if ask and query_yes_no('Vocal removal model not found. Download from HuggingFace? (Recommended)', default='yes'):
+            download_model_from_hf('huangjackson/Kim_Vocal_2', vr_models_path)
+        else:
+            print('Vocal removal model not found. Downloading from HuggingFace...')
+            download_model_from_hf('huangjackson/Kim_Vocal_2', vr_models_path)
 
     # Check for TTS models
     if not all(os.path.exists(os.path.join(tts_models_path, file)) for file in tts_required_files):
-        print('TTS pretrained models not found. Downloading from HuggingFace...')
-        download_model_from_hf('lj1995/GPT-SoVITS', tts_models_path)
+        if ask and query_yes_no('TTS pretrained models not found. Download from HuggingFace? (Recommended)', default='yes'):
+            download_model_from_hf('lj1995/GPT-SoVITS', tts_models_path)
+        else:
+            print('TTS pretrained models not found. Downloading from HuggingFace...')
+            download_model_from_hf('lj1995/GPT-SoVITS', tts_models_path)
 
     # Check for lip sync models
     if not all(os.path.exists(os.path.join(lipsync_models_path, file)) for file in lipsync_required_files):
-        print('Lip sync pretrained models not found. Downloading from HuggingFace...')
-        download_model_from_hf(
-            'huangjackson/video-retalking-pretrained', lipsync_models_path)
+        if ask and query_yes_no('Lip sync pretrained models not found. Download from HuggingFace? (Recommended)', default='yes'):
+            download_model_from_hf(
+                'huangjackson/video-retalking-pretrained', lipsync_models_path)
+        else:
+            print('Lip sync pretrained models not found. Downloading from HuggingFace...')
+            download_model_from_hf(
+                'huangjackson/video-retalking-pretrained', lipsync_models_path)
