@@ -63,9 +63,6 @@ class FaceEnhancement(object):
         full_mask = np.zeros((height, width), dtype=np.float32)
         full_img = np.zeros(ori_img.shape, dtype=np.uint8)
 
-        # TODO: rework, temporary fix to mask_sharp error when no face is present in a frame
-        mask_sharp = np.zeros(ori_img.shape, dtype=np.uint8)
-
         for i, (faceb, facial5points) in enumerate(zip(facebs, landms)):
             if faceb[4] < self.threshold:
                 continue
