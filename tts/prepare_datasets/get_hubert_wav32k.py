@@ -1,24 +1,4 @@
-# MIT License
-#
-# Copyright (c) 2024 RVC-Boss
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
+# Modified from https://github.com/RVC-Boss/GPT-SoVITS/blob/main/GPT_SoVITS/prepare_datasets/2-get-hubert-wav32k.py
 
 import os
 
@@ -31,20 +11,19 @@ from transformers import (
 )
 from scipy.io import wavfile
 
+from ..config import TTSModel
+
 # TODO: Absolute import unlike others, make every import absolute?
 from tools.ffmpeg import load_audio
 
 
 class GetHubertWav32k:
 
-    def __init__(self, transcribed_file, sliced_audio_folder, output_folder, hubert_path):
-        self.transcribed_file = transcribed_file
-        self.sliced_audio_folder = sliced_audio_folder
-        self.output_folder = output_folder
-        self.hubert_path = hubert_path
+    def __init__(self):
+        self.model = TTSModel()
 
-        self.hubert_dir = os.path.join(self.output_folder, 'hubert')
-        self.wav32_dir = os.path.join(self.output_folder, 'wav32k')
+        self.hubert_dir = os.path.join(self.model.preproc_dir, 'hubert')
+        self.wav32_dir = os.path.join(self.model.preproc_dir, 'wav32k')
 
         self.maxx = 0.95
         self.alpha = 0.5
@@ -54,12 +33,12 @@ class GetHubertWav32k:
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
         try:
-            self.model = HubertModel.from_pretrained(
-                self.hubert_path).to(self.device)
+            self.hubert_model = HubertModel.from_pretrained(
+                self.model.hubert_path).to(self.device)
             self.feature_extractor = Wav2Vec2FeatureExtractor.from_pretrained(
-                self.hubert_path)
+                self.model.hubert_path)
 
-            self.model.eval()
+            self.hubert_model.eval()
         except Exception as e:
             raise Exception(f'Error while loading hubert model: {e}')
 
@@ -82,7 +61,7 @@ class GetHubertWav32k:
 
         tensor_wav16 = torch.from_numpy(tmp_audio).to(self.device)
 
-        ssl = self.model(tensor_wav16.unsqueeze(0))[
+        ssl = self.hubert_model(tensor_wav16.unsqueeze(0))[
             'last_hidden_state'].transpose(1, 2).cpu()
         if np.isnan(ssl.detach().numpy()).any():
             self.nan_fails.append(wav_name)
@@ -95,11 +74,11 @@ class GetHubertWav32k:
         torch.save(ssl, os.path.join(self.hubert_dir, f'{wav_name}.pt'))
 
     def execute(self):
-        os.makedirs(self.output_folder, exist_ok=True)
+        os.makedirs(self.model.preproc_dir, exist_ok=True)
         os.makedirs(self.hubert_dir, exist_ok=True)
         os.makedirs(self.wav32_dir, exist_ok=True)
 
-        with open(self.transcribed_file, 'r', encoding='utf8') as f:
+        with open(self.model.transcript_path, 'r', encoding='utf8') as f:
             lines = f.read().strip('\n').split('\n')
 
         for line in lines:

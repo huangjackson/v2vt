@@ -31,9 +31,10 @@ from tools.ffmpeg import add_audio_to_video
 
 
 class LipSyncInference:
-    def __init__(self, input_video, input_audio):
+    def __init__(self, input_video, input_audio, output_path):
         self.input_video = input_video
         self.input_audio = input_audio
+        self.output_path = output_path
 
         self.model = LipSyncModel()
 
@@ -434,7 +435,7 @@ class LipSyncInference:
         out.release()
 
         outfile = add_audio_to_video(self.input_audio, os.path.join(
-            self.model.tmp_dir, 'result.mp4'), os.path.join(self.model.out_dir, 'output.mp4'))
+            self.model.tmp_dir, 'result.mp4'), self.output_path)
 
         print(
             f'[Final] Inference completed. Output video saved at {outfile}')

@@ -1,48 +1,27 @@
-# MIT License
-#
-# Copyright (c) 2024 RVC-Boss
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
+# Modified from https://github.com/RVC-Boss/GPT-SoVITS/blob/main/GPT_SoVITS/prepare_datasets/3-get-semantic.py
 
 import os
 
 import torch
 
+from ..config import TTSModel
 from ..utils import get_hparams_from_file
 from ..module.models import SynthesizerTrn
 
 
 class GetSemantic:
 
-    def __init__(self, transcribed_file, output_folder, pretrained_s2G_path, s2_config_path):
-        self.transcribed_file = transcribed_file
-        self.output_folder = output_folder
-        self.pretrained_s2G_path = pretrained_s2G_path
-        self.s2_config_path = s2_config_path
+    def __init__(self):
+        self.model = TTSModel()
 
-        self.hubert_dir = os.path.join(self.output_folder, 'hubert')
-        self.semantic_path = os.path.join(self.output_folder, 'semantic.tsv')
+        self.hubert_dir = os.path.join(self.model.preproc_dir, 'hubert')
+        self.semantic_path = os.path.join(
+            self.model.preproc_dir, 'semantic.tsv')
 
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
         try:
-            self.hps = get_hparams_from_file(self.s2_config_path)
+            self.hps = get_hparams_from_file(self.model.s2_config_path)
             self.vq_model = SynthesizerTrn(
                 self.hps.data.filter_length // 2 + 1,
                 self.hps.train.segment_size // self.hps.data.hop_length,
@@ -51,6 +30,11 @@ class GetSemantic:
             ).to(self.device)
 
             self.vq_model.eval()
+            self.vq_model.load_state_dict(
+                torch.load(self.model.pretrained_s2G_path,
+                           map_location='cpu')['weight'],
+                strict=False
+            )
         except Exception as e:
             raise Exception(f'Error while loading model: {e}')
 
@@ -67,9 +51,9 @@ class GetSemantic:
         lines.append(f'{wav_name}\t{semantic}')
 
     def execute(self):
-        os.makedirs(self.output_folder, exist_ok=True)
+        os.makedirs(self.model.preproc_dir, exist_ok=True)
 
-        with open(self.transcribed_file, 'r', encoding='utf8') as f:
+        with open(self.model.transcript_path, 'r', encoding='utf8') as f:
             lines = f.read().strip('\n').split('\n')
 
         lines1 = []

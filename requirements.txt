@@ -35,3 +35,4 @@ opencv-python==4.9.0.80
 basicsr==1.4.2
 facexlib==0.2.5
 kornia==0.5.1
+termcolor==2.4.0

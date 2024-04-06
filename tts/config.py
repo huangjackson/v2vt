@@ -4,30 +4,31 @@ import os
 class TTSModel:
 
     def __init__(self):
+        # Constants
         self.script_dir = os.path.dirname(os.path.realpath(__file__))
         self.project_dir = os.path.join(self.script_dir, '..')
         self.configs_dir = os.path.join(self.script_dir, 'configs')
         self.models_dir = os.path.join(self.script_dir, 'models')
 
+        # Default output directories
         self.tmp_dir = os.path.join(self.project_dir, 'TEMP')
         self.out_dir = os.path.join(self.project_dir, 'logs')
-
-        # TODO: let user set config
         self.preproc_dir = os.path.join(self.out_dir, '1-preproc')
         self.s2_dir = os.path.join(self.out_dir, '2-train-s2')
         self.s2_ckpt_dir = os.path.join(self.s2_dir, 'ckpt')
-
         self.s1_dir = os.path.join(self.out_dir, '3-train-s1')
         self.s1_ckpt_dir = os.path.join(self.s1_dir, 'ckpt')
-
         self.sovits_weights_path = os.path.join(
             self.out_dir, 'SoVITS_weights')
         self.gpt_weights_path = os.path.join(self.out_dir, 'GPT_weights')
 
+        # Preprocessed data paths
+        self.transcript_path = os.path.join(self.out_dir, 'transcript.list')
         self.s2_config_path = os.path.join(self.configs_dir, 's2.json')
         self.s1_config_path = os.path.join(self.configs_dir, 's1longer.yaml')
 
         try:
+            # Get pretrained models paths
             self.hubert_path = self.get_model_folder(
                 model_name='chinese-hubert-base',
                 required_files=['config.json',

@@ -1,3 +1,5 @@
+# Modified from https://github.com/RVC-Boss/GPT-SoVITS/blob/main/tools/asr/fasterwhisper_asr.py
+
 import os
 import re
 from glob import glob
@@ -32,10 +34,12 @@ class Transcriber:
 
     def transcribe(self):
         dataset = []
+        raw_text = []
 
         dataset_file_name = os.path.basename(self.input_folder)
-        dataset_file_path = os.path.join(
-            self.output_folder, 'transcribed.list')
+        dataset_file_path = os.path.join(self.output_folder, 'transcript.list')
+
+        raw_text_file_path = os.path.join(self.output_folder, 'transcript.txt')
 
         if not os.path.exists(self.output_folder):
             os.makedirs(self.output_folder)
@@ -53,10 +57,14 @@ class Transcriber:
 
                 dataset.append(
                     f'{file}|{dataset_file_name}|{info.language.upper()}|{text}')
+                raw_text.append(text)
             except Exception as e:
                 return print(f'An error occurred during transcription: {e}')
 
         with open(dataset_file_path, 'w', encoding='utf-8') as f:
             f.write('\n'.join(dataset))
+
+        with open(raw_text_file_path, 'w', encoding='utf-8') as f:
+            f.write('\n'.join(raw_text))
 
         return self.output_folder

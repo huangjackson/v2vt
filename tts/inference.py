@@ -93,9 +93,8 @@ class DictToAttrRecursive(dict):
 
 class TTSInference:
 
-    def __init__(self, output_folder, ref_wav_path, ref_text, ref_text_language, text,
+    def __init__(self, ref_wav_path, ref_text, ref_text_language, text,
                  text_language, top_k=5, top_p=1, temperature=1, ref_free=True):
-        self.output_folder = output_folder
         self.ref_wav_path = ref_wav_path
         self.ref_text = ref_text
         self.ref_text_language = ref_text_language  # 'en', 'zh', 'all_zh', 'auto'
@@ -431,5 +430,5 @@ class TTSInference:
 
         audio_data = (np.concatenate(audio_opt, 0) * 32768).astype(np.int16)
         output_file = 'output.wav'
-        wavfile.write(os.path.join(self.output_folder, output_file),
+        wavfile.write(os.path.join(self.model.out_dir, output_file),
                       self.hps.data.sampling_rate, audio_data)

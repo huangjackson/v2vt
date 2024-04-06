@@ -1,51 +1,29 @@
-# MIT License
-#
-# Copyright (c) 2024 RVC-Boss
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
+# Modified from https://github.com/RVC-Boss/GPT-SoVITS/blob/main/GPT_SoVITS/prepare_datasets/1-get-text.py
 
 import os
 
 import torch
 from transformers import AutoModelForMaskedLM, AutoTokenizer
 
+from ..config import TTSModel
 from ..text.cleaner import clean_text
 
 
 class GetText:
 
-    def __init__(self, transcribed_file, sliced_audio_folder, output_folder, roberta_path):
-        self.transcribed_file = transcribed_file
-        self.sliced_audio_folder = sliced_audio_folder
-        self.output_folder = output_folder
-        self.roberta_path = roberta_path
+    def __init__(self):
+        self.model = TTSModel()
 
-        self.txt_path = os.path.join(self.output_folder, 'phoneme.txt')
-        self.bert_dir = os.path.join(self.output_folder, 'bert')
+        self.txt_path = os.path.join(self.model.preproc_dir, 'phoneme.txt')
+        self.bert_dir = os.path.join(self.model.preproc_dir, 'bert')
 
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
         try:
             self.tokenizer = AutoTokenizer.from_pretrained(
-                self.roberta_path)
+                self.model.roberta_path)
             self.bert_model = AutoModelForMaskedLM.from_pretrained(
-                self.roberta_path).to(self.device)
+                self.model.roberta_path).to(self.device)
         except Exception as e:
             raise Exception(f'Error while loading roberta model: {e}')
 
@@ -86,12 +64,12 @@ class GetText:
                 print(f'Error while processing {name}: {e}')
 
     def execute(self):
-        os.makedirs(self.output_folder, exist_ok=True)
+        os.makedirs(self.model.preproc_dir, exist_ok=True)
         os.makedirs(self.bert_dir, exist_ok=True)
 
         todo = []
         res = []
-        with open(self.transcribed_file, 'r', encoding='utf8') as f:
+        with open(self.model.transcript_path, 'r', encoding='utf8') as f:
             lines = f.read().strip('\n').split('\n')
 
         for line in lines:

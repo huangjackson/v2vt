@@ -120,6 +120,8 @@ Currently only tested in a Windows 11 environment with Python 3.9, PyTorch 2.1.1
   - [ ] *Better face detection ([#2](https://github.com/huangjackson/v2vt/issues/2))
   - [ ] Improve inference speed
 - [ ] Additional languages (currently only en & zh)
+- [ ] Improve overall speed
+- [ ] Improve logging ([#4](https://github.com/huangjackson/v2vt/issues/4))
 
 See the [open issues](https://github.com/huangjackson/v2vt/issues) for a full list of proposed features (and known issues).
 
