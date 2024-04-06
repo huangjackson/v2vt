@@ -108,6 +108,8 @@ Currently only tested in a Windows 11 environment with Python 3.9, PyTorch 2.1.1
 <!-- ROADMAP -->
 ## Roadmap
 
+Listed generally in order of priority:
+
 - [x] Vocal isolation
 - [x] Transcription
 - [x] Translation
@@ -122,6 +124,8 @@ Currently only tested in a Windows 11 environment with Python 3.9, PyTorch 2.1.1
 - [ ] Additional languages (currently only en & zh)
 - [ ] Improve overall speed
 - [ ] Improve logging ([#4](https://github.com/huangjackson/v2vt/issues/4))
+- [ ] Create Colab
+- [ ] Create live demo on HuggingFace
 
 See the [open issues](https://github.com/huangjackson/v2vt/issues) for a full list of proposed features (and known issues).
 
