@@ -1,7 +1,7 @@
 import os
 
 from .separate import (
-    SeparateMDX, verify_audio, clear_gpu_cache
+    SeparateMDX, verify_audio
 )
 
 
@@ -63,7 +63,6 @@ class UltimateVocalRemover:
 
             separator = SeparateMDX(model, process_data)
             separator.separate()
-            clear_gpu_cache()
 
         except Exception as e:
             return print(f'An error occurred during vocal removal: {e}')

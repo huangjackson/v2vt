@@ -34,8 +34,9 @@ from .utils import (
     plot_spectrogram_to_numpy,
     summarize,
     savee,
+    clear_gpu_cache,
 )
-from .config import TTSModel    
+from .config import TTSModel
 
 # Prevent module not found error when loading pretrained models
 import sys
@@ -284,6 +285,8 @@ class S2Train:
             )
             scheduler_g.step()
             scheduler_d.step()
+
+            clear_gpu_cache()
 
     def train_and_evaluate(self, epoch, nets, optims, schedulers, scaler, loaders, logger, writers):
         net_g, net_d = nets

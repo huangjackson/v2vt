@@ -19,6 +19,7 @@ from .AR.utils.io import load_yaml_config
 from .AR.utils import get_newest_ckpt
 from .AR.models.t2s_lightning_module import Text2SemanticLightningModule
 from .AR.data.data_module import Text2SemanticDataModule
+from .utils import clear_gpu_cache
 
 logging.getLogger('numba').setLevel(logging.WARNING)
 logging.getLogger('matplotlib').setLevel(logging.WARNING)
@@ -69,6 +70,7 @@ class my_model_ckpt(ModelCheckpoint):
                         os.path.join(self.half_weights_save_dir,
                                      f's1-e{trainer.current_epoch + 1}.ckpt')
                     )
+                clear_gpu_cache()
             self._save_last_checkpoint(trainer, monitor_candidates)
 
 

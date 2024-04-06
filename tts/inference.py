@@ -18,6 +18,7 @@ from .module.mel_processing import spectrogram_torch
 from .AR.models.t2s_lightning_module import Text2SemanticLightningModule
 from .text.cleaner import clean_text
 from .text import cleaned_text_to_sequence
+from .utils import clear_gpu_cache
 
 # TODO: Absolute import unlike others, make every import absolute?
 from tools.ffmpeg import load_audio
@@ -426,6 +427,9 @@ class TTSInference:
             audio_opt.append(zero_wav)
 
             t4 = ttime()
+
+            clear_gpu_cache()
+
         print('%.3f\t%.3f\t%.3f\t%.3f' % (t1 - t0, t2 - t1, t3 - t2, t4 - t3))
 
         audio_data = (np.concatenate(audio_opt, 0) * 32768).astype(np.int16)

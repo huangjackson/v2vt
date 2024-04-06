@@ -1,6 +1,7 @@
 # Modified from https://github.com/OpenTalker/video-retalking/blob/main/inference.py
 
 import os
+import gc
 from PIL import Image
 
 import torch
@@ -28,6 +29,11 @@ from .utils.inference_utils import (Laplacian_Pyramid_Blending_with_mask, face_d
 
 # TODO: Absolute import unlike others, make every import absolute?
 from tools.ffmpeg import add_audio_to_video
+
+
+def clear_gpu_cache():
+    gc.collect()
+    torch.cuda.empty_cache()
 
 
 class LipSyncInference:
@@ -310,7 +316,7 @@ class LipSyncInference:
         else:
             print('[Step 3] Using saved stabilized video...')
             imgs = np.load(stabilized_path)
-        torch.cuda.empty_cache()
+        clear_gpu_cache()
 
         # No need because step 1 (see tools/ffmpeg.py extract_audio) ensures audio is wav
         # if not self.input_audio.endswith('.wav'):
@@ -399,7 +405,7 @@ class LipSyncInference:
 
             pred = pred.cpu().numpy().transpose(0, 2, 3, 1) * 255.
 
-            torch.cuda.empty_cache()
+            clear_gpu_cache()
 
             for p, f, xf, c in zip(pred, frames, f_frames, coords):
                 y1, y2, x1, x2 = c

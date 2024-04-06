@@ -22,6 +22,7 @@
 
 import os
 import sys
+import gc
 import logging
 import json
 import glob
@@ -244,3 +245,8 @@ def savee(ckpt, name, epoch, steps, hps):
         return 'Success.'
     except Exception as e:
         return print(f'Error saving weight: {e}')
+
+
+def clear_gpu_cache():
+    gc.collect()
+    torch.cuda.empty_cache()
