@@ -57,7 +57,6 @@ if __name__ == '__main__':
                             model_name='zh-en').run()
 
     cprint('[Step 6]: Executing TTS...', 'black', 'on_cyan', attrs=['bold'])
-    # TODO: Temporarily hard-coded output speech
     tts_1a = GetText().execute()
     tts_1b = GetHubertWav32k().execute()
     tts_1c = GetSemantic().execute()
@@ -70,7 +69,7 @@ if __name__ == '__main__':
     tts_3 = TTSInference(ref_wav_path='logs/sliced_audio/audio_Vocals_1.wav',
                          ref_text='',
                          ref_text_language='zh',
-                         text='Good morning everyone. The bible teaches us to be kind and forgiving.',
+                         text='logs/translation.txt',
                          text_language='en',
                          ref_free=True).run()
 

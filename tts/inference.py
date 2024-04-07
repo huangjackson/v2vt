@@ -332,6 +332,9 @@ class TTSInference:
             if self.ref_text[-1] not in splits:
                 self.ref_text += '。' if self.ref_text_language == 'zh' else '.'
 
+        with open(self.text, 'r', encoding='utf-8') as f:
+            self.text = f.read()
+
         self.text = self.text.strip('\n')
         if self.text[0] not in splits and len(get_first(self.text)) < 4:
             self.text = '。' + self.text if self.text_language == 'zh' else '.' + self.text
