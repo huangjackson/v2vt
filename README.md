@@ -19,7 +19,7 @@
   <p align="center">
     Video to video translation and dubbing via few shot voice cloning & audio-based lip sync.
     <br />
-    <a href="https://huggingface.co/huangjackson"><strong>~~See the demo »~~</strong></a>
+    <a href="https://huggingface.co/huangjackson"><strong><s>See the demo »</s></strong></a>
     <br />
     <br />
     <a href="https://github.com/huangjackson/v2vt/issues/new?template=bug_report.md">Report Bug</a>
