@@ -154,7 +154,7 @@ See individual files and folders for any other licenses credited.
 <!-- CONTACT -->
 ## Contact
 
-Jackson Huang - wboh010@gmail.com
+Jackson Huang - wboh010@protonmail.com
 
 Project Link: [https://github.com/huangjackson/v2vt](https://github.com/huangjackson/v2vt)
 
