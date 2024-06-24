@@ -20,12 +20,12 @@
   <p align="center">
     Video to video translation and dubbing via few shot voice cloning & audio-based lip sync.
     <br />
-    <a href="https://huggingface.co/huangjackson"><strong>See the demo »</strong></a>
+    <a href="https://huggingface.co/huangjackson"><strong><s>See the demo »</s></strong></a>
     <br />
     <br />
-    <a href="https://github.com/huangjackson/v2vt/issues">Report Bug</a>
+    <a href="https://github.com/huangjackson/v2vt/issues/new?template=bug_report.md">Report Bug</a>
     ·
-    <a href="https://github.com/huangjackson/v2vt/issues">Request Feature</a>
+    <a href="https://github.com/huangjackson/v2vt/issues/new?template=feature_request.md">Request Feature</a>
   </p>
 </div>
 
@@ -48,7 +48,7 @@
 <!-- ABOUT THE PROJECT -->
 ## Features
 
-demo.mp4
+~~demo.mp4~~
 
 Currently supports English and Chinese
 
@@ -155,7 +155,7 @@ See individual files and folders for any other licenses credited.
 <!-- CONTACT -->
 ## Contact
 
-Jackson Huang - wboh010@gmail.com
+Jackson Huang - wboh010@protonmail.com
 
 Project Link: [https://github.com/huangjackson/v2vt](https://github.com/huangjackson/v2vt)
 
