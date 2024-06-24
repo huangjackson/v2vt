@@ -3,6 +3,7 @@
 
 > [!WARNING]
 > Please note that this project is currently under active development and is not yet operational. Features may be incomplete, and functionality is not guaranteed.
+> Development will be slow for a while as I am busy with classes & working on other projects.
 
 
 <!-- PROJECT SHIELDS -->
